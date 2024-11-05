@@ -1,207 +1,210 @@
 /* styles.css */
-  @import url('https://fonts.googleapis.com/css2?family=Arvo:wght@700&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Arvo:wght@700&display=swap');
 
 /* Reset some default styles */
 body, h1, h2, p, ul, li {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 /* Apply a background color to the body */
 body {
-  background-color: #f0f0f0;
-  font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
 }
 
 /* Create a grid layout */
 .container {
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  grid-template-areas: "sidebar content";
-  grid-gap: 20px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: "sidebar content";
 }
 
 /* Style the sidebar (navbar) */
 .sidebar {
-  height: 100%;
-  width: 180px;
-  grid-area: sidebar;
-  background-image: url(../images/navbar-background.png);
-  background-size: cover;
-  background-color: #333;
-  color: #fff;
-  padding: 20px;
-  position: fixed;
+    height: 100vh;
+    width: 200px;
+    grid-area: sidebar;
+    background-image: url(../images/navbar-background.png);
+    background-size: cover;
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    overflow-y: auto; /* In case the content is too long */
 }
 
 .sidebar .home {
-  text-align: center;
-  margin-bottom: 25px;
+    text-align: center;
+    margin-bottom: 25px;
 }
 
 .sidebar a {
-  display: block;
-  color: #fff;
-  text-decoration: none;
+    display: block;
+    color: #fff;
+    text-decoration: none;
 }
 
 .sidebar ul {
-  list-style: none;
-  margin-bottom: 20px;
+    list-style: none;
+    margin-bottom: 20px;
 }
 
 .sidebar li {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .sidebar li:hover {
-  background-color: #ddd;
-  color: white;
+    background-color: #ddd;
+    color: white;
 }
 
 .sidebar button {
-  display: block;
-  text-transform: uppercase;
-  color: rgb(255, 255, 255);
-  width: 100%;
-  padding: 12px;
-  border-radius: 4px;
-  border: 1px solid #ffffff;
-  text-align: center;
-  background-color: #61A4C9;
-  font-size: 0.9375em;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+    display: block;
+    text-transform: uppercase;
+    color: rgb(255, 255, 255);
+    width: 100%;
+    padding: 12px;
+    border-radius: 4px;
+    border: 1px solid #ffffff;
+    text-align: center;
+    background-color: #61A4C9;
+    font-size: 0.9375em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
 }
 
 .sidebar button:hover {
-  background-color: #ddd;
+    background-color: #ddd;
 }
 
 /* Style the content area */
 .content {
-  grid-area: content;
-}
-
-/* Style the header */
-header {
-  font-family: 'Arvo';
-  background-color: #fff;
-  color: #383838;
-  text-align: center;
-  padding: 20px;
-}
-
-header .header-text {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-header h1 {
-  font-size: 32px;
-  margin-bottom: 15px;
+    grid-area: content;
+    padding-left: 220px;
 }
 
 /* Style the main content sections */
 section {
-  font-family: 'Times New Roman';
-  font-size: 17px;
-  background-color: #fff;
-  padding: 20px;
-  margin-bottom: 20px;
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
 }
 
 section h2 {
-  font-size: 24px;
-  font-family: 'Arvo';
-  font-weight: bold;
-  margin-bottom: 10px;
+    font-size: 24px;
+    margin-bottom: 10px;
 }
 
 /* Style the main-image details */
 .main-images {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .main-images img {
-  width: 31%;
-  margin-bottom: 20px;
-}
-
-/* Style the about details */
-.main {
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin: 10px;
-}
-
-.deskripsi {
-  text-align: justify;
-  line-height: 30px;
+    width: 31%;
+    margin-bottom: 20px;
 }
 
 /* Style the room details */
 .room {
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
 }
 
 .room img {
-  max-width: 100%;
+    max-width: 100%;
 }
 
-/* Style the footer as a horizontal grid with 3 columns */
+/* Footer styles */
 footer {
-  background-color: #1c3848;
-  background-size: cover;
-  color: #fff;
-  text-align: center;
-  padding: 10px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+    background-color: #1c3848;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
 }
 
-/* Style each column in the footer */
 .footer-column {
-  padding: 0 10px;
-  border-right: 1px solid #555;
+    padding: 0 10px;
+    border-right: 1px solid #555;
 }
 
-/* Remove the border from the last column */
 .footer-column:last-child {
-  border-right: none;
+    border-right: none;
 }
 
-.media-social a {
-  text-align: center;
-  font-size: 25px;
-  width: 30px;
-  height: 30px;
-  margin-inline: 10px;
-  color: #ffffff;
-}
+/* Media Queries for Responsiveness */
 
-/* Media query for tablets */
-@media screen and (min-width: 600px) {
+/* For tablets */
+@media screen and (max-width: 768px) {
   .container {
-    grid-template-columns: 200px 1fr;
-    grid-template-areas: "sidebar content";
-  }
-}
-
-/* Media query for smartphones */
-@media screen and (max-width: 599px) {
-  .container {
-    grid-template-columns: 1fr;
-    grid-template-areas: "content";
+      grid-template-columns: 1fr;
+      grid-template-areas: 
+          "sidebar"
+          "content";
   }
 
-  /* Hide the sidebar on smaller screens */
   .sidebar {
-    display: none;
+      width: 100%;
+      height: auto;
+      position: static;
+  }
+
+  .content {
+      padding-left: 0; /* Remove the left padding on smaller screens */
+  }
+
+    .main-images img {
+        width: 48%;
+    }
+}
+
+/* For smartphones */
+@media screen and (max-width: 480px) {
+    .sidebar ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .sidebar li {
+        margin: 5px;
+    }
+
+    .main-images img {
+        width: 100%;
+    }
+
+    footer {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-column {
+        border-right: none;
+        border-bottom: 1px solid #555;
+        padding: 10px 0;
+    }
+
+    .footer-column:last-child {
+        border-bottom: none;
+    }
+}
+
+/* For larger screens (laptops and desktops) */
+@media screen and (min-width: 1024px) {
+  .container {
+      grid-template-columns: auto 1fr; /* Changed from 200px 1fr */
+  }
+
+  .content {
+      padding-left: 220px; /* Ensure there's space for the sidebar */
   }
 }
