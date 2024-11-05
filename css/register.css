@@ -1,0 +1,83 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-image: linear-gradient(to right, #6a11cb, #2575fc); /* Gradient background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+    padding: 40px; /* Increased padding for better spacing */
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    width: 400px; /* Increased width for a more balanced look */
+    animation: fadeIn 0.5s ease-in-out; /* Animation on load */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center elements horizontally */
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    width: 100%; /* Full width for input groups */
+}
+
+label {
+    margin-bottom: 5px;
+    color: #666;
+    text-align: left; /* Align labels to the left */
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%; /* Full width for inputs */
+    transition: border-color 0.3s; /* Smooth transition */
+}
+
+input:focus {
+    border-color: #6a11cb; /* Change border color on focus */
+}
+
+.btn {
+    background-color: #6a11cb; /* Button background color */
+    color: white; /* Button text color */
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%; /* Full width for button */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+.btn:hover {
+    background-color: #2575fc; /* Change background color on hover */
+}
+
+.back-link {
+    color: #6a11cb; /* Link color */
+    text-decoration: none; /* Remove underline */
+    margin-top: 10px; /* Space above the link */
+}
+
+.back-link:hover {
+    text-decoration: underline; /* Underline on hover */
+}
