@@ -31,9 +31,6 @@ body {
     color: #fff;
     padding: 20px;
     position: fixed;
-    left: 0;
-    top: 0;
-    overflow-y: auto; /* In case the content is too long */
 }
 
 .sidebar .home {
@@ -84,7 +81,6 @@ body {
 /* Style the content area */
 .content {
     grid-area: content;
-    padding-left: 220px;
 }
 
 /* Style the main content sections */
@@ -145,22 +141,22 @@ footer {
 
 /* For tablets */
 @media screen and (max-width: 768px) {
-  .container {
-      grid-template-columns: 1fr;
-      grid-template-areas: 
-          "sidebar"
-          "content";
-  }
+    .container {
+        grid-template-columns: 1fr;
+        grid-template-areas: 
+            "sidebar"
+            "content";
+    }
 
-  .sidebar {
-      width: 100%;
-      height: auto;
-      position: static;
-  }
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+    }
 
-  .content {
-      padding-left: 0; /* Remove the left padding on smaller screens */
-  }
+    .content {
+        margin-left: 0;
+    }
 
     .main-images img {
         width: 48%;
@@ -200,11 +196,11 @@ footer {
 
 /* For larger screens (laptops and desktops) */
 @media screen and (min-width: 1024px) {
-  .container {
-      grid-template-columns: auto 1fr; /* Changed from 200px 1fr */
-  }
+    .container {
+        grid-template-columns: 200px 1fr;
+    }
 
-  .content {
-      padding-left: 220px; /* Ensure there's space for the sidebar */
-  }
+    .content {
+        margin-left: 220px;
+    }
 }
