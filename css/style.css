@@ -137,14 +137,37 @@ footer {
 }
 
 /* Responsive Design */
-/* PC and Large Screens (1200px and up) */
-@media screen and (min-width: 1200px) {
+
+/* Tablets (including iPad Pro) */
+@media (min-width: 768px) and (max-width: 1024px) {
     .container {
-        grid-template-columns: 250px 1fr;
+        grid-template-columns: 200px 1fr;
+    }
+
+    .sidebar {
+        position: fixed;
+        height: 100vh;
+        width: 200px;
+    }
+
+    .content {
+        margin-left: 200px;
+        padding: 30px; /* Increase padding for better spacing */
     }
 
     .main-images {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr); /* Two columns for images */
+    }
+
+    .footer {
+        margin-left: 200px; /* Align footer with content */
+    }
+}
+
+/* Laptops and PCs (1025px and up) */
+@media (min-width: 1025px) {
+    .container {
+        grid-template-columns: 250px 1fr;
     }
 
     .sidebar {
@@ -155,74 +178,22 @@ footer {
 
     .content {
         margin-left: 250px;
-    }
-
-    footer {
-        margin-left: 250px;
-    }
-}
-
-/* Laptop and Medium Screens (992px to 1199px) */
-@media screen and (min-width: 992px) and (max-width: 1199px) {
-    .container {
-        grid-template-columns: 220px 1fr;
+        padding: 40px; /* Increase padding for larger screens */
     }
 
     .main-images {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .sidebar {
-        position: fixed;
-        height: 100vh;
-        width: 220px;
-    }
-
-    .content {
-        margin-left: 220px;
+        grid-template-columns: repeat(3, 1fr); /* Three columns for images */
     }
 
     footer {
-        margin-left: 220px;
-    }
-}
-
-/* Tablet (768px to 991px) */
-@media screen and (min-width: 768px) and (max-width: 991px) {
-    .container {
-        grid-template-columns: 180px 1fr;
-    }
-
-    .main-images {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .sidebar {
-        position: fixed;
-        height: 100vh;
-        width: 180px;
-    }
-
-    .content {
-        margin-left: 180px;
-    }
-
-    footer {
-        margin-left: 180px;
-    }
-
-    .sidebar .logo {
-        width: 100px;
-        height: 100px;
+        margin-left: 250px; /* Align footer with content */
     }
 }
 
 /* Mobile Phones (up to 767px) */
-@media screen and (max-width: 767px) {
+@media (max-width: 767px) {
     .container {
         grid-template-columns: 1fr;
-    }
-
     .sidebar {
         position: relative;
         height: auto;
@@ -230,15 +201,16 @@ footer {
     }
 
     .main-images {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Single column for images */
     }
 
     .content {
         margin-left: 0;
+        padding: 20px; /* Standard padding for mobile */
     }
 
     footer {
-        margin-left: 0;
+        margin-left: 0; /* Align footer with content */
     }
 
     .sidebar .logo {
@@ -277,10 +249,11 @@ img {
 }
 
 /* Footer Grid for larger screens */
-@media screen and (min-width: 768px) {
+@media (min-width: 768px) {
     footer {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 20px;
     }
+}
 }
