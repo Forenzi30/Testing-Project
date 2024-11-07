@@ -91,3 +91,4 @@ document.addEventListener("DOMContentLoaded", function() {
 document.querySelector('.login-button').addEventListener('click', function() {
   window.location.href = 'login.html'; // Change 'login.html' to your login page URL
 });
+
