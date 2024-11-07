@@ -324,6 +324,73 @@
   transition: all 0.3s ease;
 }
 
+/* Tablet-specific styles (iPad Mini, iPad Air, etc.) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .sidebar {
+    width: 200px; /* Slightly narrower sidebar for tablets */
+    padding: 15px; /* Reduce padding */
+  }
+
+  .content {
+    margin-left: 200px; /* Match the sidebar width */
+  }
+
+  .sidebar .logo {
+    width: 80px; /* Slightly smaller logo */
+    height: auto;
+  }
+
+  .sidebar ul {
+    margin-bottom: 15px;
+  }
+
+  .sidebar li {
+    margin-bottom: 8px;
+  }
+
+  .sidebar a {
+    padding: 8px;
+    font-size: 14px; /* Slightly smaller font */
+  }
+
+  .sidebar button {
+    padding: 6px;
+    font-size: 14px;
+  }
+
+  /* Main content adjustments */
+  .main-content {
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 15px;
+  }
+
+  header {
+    margin-left: 40px;
+  }
+
+  header h1 {
+    font-size: 30px;
+  }
+
+  header h2 {
+    font-size: 18px;
+  }
+
+  .img1, .img2 {
+    max-height: 300px;
+  }
+
+  .topright-content h1,
+  .midleft-content h1 {
+    font-size: 28px;
+  }
+
+  .menu-btn, .close-btn {
+    display: none; /* Hide menu buttons on tablets */
+  }
+}
+
 /* Laptops and PCs */
 @media (min-width: 1025px) {
   .sidebar {
