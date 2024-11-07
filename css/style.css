@@ -23,6 +23,10 @@ body {
 /* Sidebar Styles */
 .sidebar {
     background-color: #333;
+    background-image: url('../images/navbar-background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     color: white;
     padding: 20px;
     transition: all 0.3s ease;
@@ -33,6 +37,17 @@ body {
     display: flex;
     flex-direction: column;
     z-index: 1000; /* Ensure sidebar appears above other content */
+}
+
+.sidebar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6); /* This adds a dark overlay */
+    z-index: -1;
 }
 
 .sidebar .home {
@@ -140,13 +155,28 @@ footer {
 
 .footer-column {
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.footer-column h4 {
+    margin-bottom: 15px;  /* This creates space between h4 and the content below it */
+    font-size: 1.2em;
+    border-bottom: 2px solid white;  /* This adds a line under each h4 */
+    padding-bottom: 5px;
+}
+
+.copyright, .media-social, .alamat {
+    padding-left: 10px;  /* This indents the content under each h4 */
 }
 
 .media-social a {
     color: white;
-    margin: 0 10px;
+    margin-right: 10px;
     font-size: 1.2em;
+}
+
+.media-social a:hover {
+    color: #61A4C9;
 }
 
 /* Responsive Design */
@@ -164,6 +194,9 @@ footer {
     }
     .main-images {
         grid-template-columns: repeat(3, 1fr); /* 2 images per row on medium screens */
+    }
+    .footer-column {
+        margin-bottom: 0;
     }
 }
 
