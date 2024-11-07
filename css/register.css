@@ -57,6 +57,10 @@ input:focus {
     border-color: #6a11cb; /* Change border color on focus */
 }
 
+input[type="tel"]:focus {
+    border-color: #6a11cb;
+}
+
 .btn {
     background-color: #6a11cb; /* Button background color */
     color: white; /* Button text color */

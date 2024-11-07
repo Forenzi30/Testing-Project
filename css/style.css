@@ -30,32 +30,38 @@ body {
     position: fixed;
     height: 100vh;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000; /* Ensure sidebar appears above other content */
 }
 
 .sidebar .home {
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
 }
 
 .sidebar .logo {
     max-width: 100%;
     height: auto;
+    width: 100px;          /* Reduce logo size */
+    margin-bottom: 10px;   /* Add some spacing */
 }
 
 .sidebar ul {
     list-style: none;
     padding: 0;
+    margin-bottom: 10px;   /* Add some spacing */
 }
 
 .sidebar li {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .sidebar a {
     color: white;
     text-decoration: none;
     display: block;
-    padding: 8px;
+    padding: 6px;
     transition: background-color 0.3s ease;
 }
 
@@ -65,8 +71,8 @@ body {
 
 .sidebar button {
     width: 100%;
-    padding: 10px;
-    margin-top: 10px;
+    padding: 8px;
+    margin-top: 5px;
     background-color: #61A4C9;
     color: white;
     border: none;
@@ -153,6 +159,9 @@ footer {
     .content {
         margin-left: 200px;
     }
+    .menu-btn, .close-btn {
+        display: none;
+    }
     .main-images {
         grid-template-columns: repeat(3, 1fr); /* 2 images per row on medium screens */
     }
@@ -162,9 +171,13 @@ footer {
 @media (min-width: 1025px) {
     .sidebar {
         width: 250px;
+        overflow: hidden;
     }
     .content {
         margin-left: 250px;
+    }
+    .menu-btn, .close-btn {
+        display: none;
     }
 }
 
@@ -174,12 +187,52 @@ footer {
         flex-direction: column;
     }
     .sidebar {
-        width: 100%;
-        height: auto;
-        position: static;
+        width: 0; /* Start with width 0 */
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        overflow-x: hidden;
+        padding: 0;
+        transition: 0.3s;
+    }
+    /* When sidebar is open */
+    .sidebar.active {
+        width: 250px;
+        padding: 20px;
     }
     .content {
         margin-left: 0;
+        transition: margin-left 0.3s;
+    }
+    /* Add hamburger menu button */
+    .menu-btn {
+        display: block;
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 999;
+        background: #333;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    /* Hide menu button when sidebar is open */
+    .menu-btn.hide {
+        display: none;
+    }
+    /* Add close button for sidebar */
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
     }
     .main-images {
         grid-template-columns: 1fr;
