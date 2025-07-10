@@ -25,121 +25,101 @@
     min-height: 100vh;
     transition: all 0.3s ease;
   }
+
+  /* Hide menu button on desktop, show on mobile */
+  .menu-btn {
+      display: none;
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 2001;
+      background: #333;
+      color: #fff;
+      border: none;
+      font-size: 2em;
+      padding: 8px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+  }
   
-  /* Sidebar Styles */
-.sidebar {
-  background-color: #333;
-  background-image: url('../images/navbar-background.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  color: white;
-  padding: 20px;
-  transition: all 0.3s ease;
-  width: 250px;
-  position: fixed;
-  height: 100vh;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  z-index: 1000;
-}
+  /* Top Navbar Styles */
+  .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #333;
+      background-image: url('../images/navbar-background.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: white;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
 
-.sidebar::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: -1;
-}
+  .navbar-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px 20px;
+  }
 
-.sidebar .home {
-  text-align: center;
-  margin-bottom: 15px;
-}
+  .logo-link {
+      display: flex;
+      align-items: center;
+  }
 
-.sidebar .logo {
-  max-width: 100%;
-  height: auto;
-  width: 100px;
-  margin-bottom: 10px;
-}
+  .logo {
+      width: 60px;
+      height: 60px;
+  }
 
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-  margin-bottom: 10px;
-}
+  .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 18px;
+      margin: 0;
+      padding: 0;
+  }
 
-.sidebar li {
-  margin-bottom: 10px;
-}
+  .nav-links li a {
+      color: white;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      transition: background 0.3s;
+  }
 
-.sidebar a {
-  color: white;
-  text-decoration: none;
-  display: block;
-  padding: 6px;
-  transition: background-color 0.3s ease;
-}
+  .nav-links li a:hover {
+      background: #555;
+  }
 
-.sidebar a:hover {
-  background-color: #555;
-}
+  .nav-buttons {
+      display: flex;
+      gap: 10px;
+  }
 
-.sidebar button {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  background-color: #61A4C9;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+  .nav-btn {
+      background: #61A4C9;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background 0.3s;
+  }
 
-.sidebar button:hover {
-  background-color: #4a8ab0;
-}
-
-/* Menu Button Styles */
-.menu-btn {
-  display: none;
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 999;
-  background: #333;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.close-btn {
-  display: none;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-}
-  
-  
+  .nav-btn:hover {
+      background: #4a8ab0;
+  }
+   
   /* Style the content area */
   .content {
-    flex-grow: 1;
+    margin-left: 0 !important;
+    margin-top: 90px; /* Adjust based on navbar height */
     padding: 20px;
-    margin-left: 250px; /* Match sidebar width */
-    transition: margin-left 0.3s ease;
   }
   
   /* Style the header */
@@ -204,30 +184,28 @@
   }
 
 
-  /* Style the footer as a horizontal grid with 3 columns */
-  footer {
+  /* Footer Styles */
+footer {
     background-color: #333;
     color: white;
     padding: 20px;
     margin-top: auto;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
 }
 
 .footer-column {
     text-align: center;
+    margin-bottom: 20px;
 }
 
 .footer-column h4 {
-    margin-bottom: 15px;
+    margin-bottom: 15px;  /* This creates space between h4 and the content below it */
     font-size: 1.2em;
-    border-bottom: 2px solid white;
+    border-bottom: 2px solid white;  /* This adds a line under each h4 */
     padding-bottom: 5px;
 }
 
 .copyright, .media-social, .alamat {
-    padding-left: 10px;
+    padding-left: 10px;  /* This indents the content under each h4 */
 }
 
 .media-social a {
@@ -240,374 +218,112 @@
     color: #61A4C9;
 }
 
-  /* Responsive Design */
-
-  .sidebar {
-    width: 0;
-    overflow: hidden;
-}
-
-.sidebar.active {
-    width: 250px;
-    padding: 20px;
-}
-
-.content {
-    margin-left: 0;
-    padding: 20px;
-    width: 100%;
-    transition: margin-left 0.3s ease;
-}
-
-.menu-btn {
-    display: block;
-}
-
-.close-btn {
-    display: block;
-}
-
-/* Main content adjustments */
-.main-content {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    margin: 15px;
-}
-
-/* iPad Pro and larger tablets (1024px - 1366px) */
-@media (min-width: 1024px) and (max-width: 1366px) {
-  .sidebar {
-    width: 250px;
-  }
-  .content {
-    margin-left: 250px;
-  }
-  .menu-btn,
-  .close-btn {
-    display: none;
-  }
-  .main-content {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-      margin: 20px;
-  }
-
-  .img1, .img2 {
-      max-height: 400px;
-  }
-
-  header h1 {
-      font-size: 36px;
-  }
-
-  header h2 {
-      font-size: 20px;
-  }
-
-  .topright-content h1,
-  .midleft-content h1 {
-      font-size: 32px;
-  }
-
-  .topright-content p,
-  .midleft-content p,
-  .topright-content ul,
-  .midleft-content ul {
-      font-size: 18px;
-  }
-}
-
-/* Ensure smooth transitions */
-.sidebar,
-.content,
-.menu-btn {
-  transition: all 0.3s ease;
-}
-
-/* Tablet-specific styles (iPad Mini, iPad Air, etc.) */
-@media (min-width: 768px) and (max-width: 1024px) {
-  .sidebar {
-    width: 200px; /* Slightly narrower sidebar for tablets */
-    padding: 15px; /* Reduce padding */
-  }
-
-  .content {
-    margin-left: 200px; /* Match the sidebar width */
-  }
-
-  .sidebar .logo {
-    width: 80px; /* Slightly smaller logo */
-    height: auto;
-  }
-
-  .sidebar ul {
-    margin-bottom: 15px;
-  }
-
-  .sidebar li {
-    margin-bottom: 8px;
-  }
-
-  .sidebar a {
-    padding: 8px;
-    font-size: 14px; /* Slightly smaller font */
-  }
-
-  .sidebar button {
-    padding: 6px;
-    font-size: 14px;
-  }
-
-  /* Main content adjustments */
-  .main-content {
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin: 15px;
-  }
-
-  header {
-    margin-left: 40px;
-  }
-
-  header h1 {
-    font-size: 30px;
-  }
-
-  header h2 {
-    font-size: 18px;
-  }
-
-  .img1, .img2 {
-    max-height: 300px;
-  }
-
-  .topright-content h1,
-  .midleft-content h1 {
-    font-size: 28px;
-  }
-
-  .menu-btn, .close-btn {
-    display: none; /* Hide menu buttons on tablets */
-  }
-}
-
-/* Laptops and PCs */
-@media (min-width: 1025px) {
-  .sidebar {
-    width: 250px;
-    overflow: hidden;
-  }
-  .content {
-    margin-left: 250px;
-  }
-  .menu-btn, .close-btn {
-    display: none;
-  }
-  #rooms {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  /* Keep your existing desktop layout */
-}
-
-/* Mobile Phones */
-@media (max-width: 767px) {
-  .container {
-      flex-direction: column;
-  }
-  .sidebar {
-    width: 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    overflow-x: hidden;
-    padding: 0;
-    transition: 0.3s;
-  }
-  .sidebar.active {
-    width: 250px;
-    padding: 20px;
-  }
-  .menu-btn {
-    display: block;
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    z-index: 999;
-    background: #333;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-.menu-btn.hide {
-    display: none;
-}
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 24px;
-    cursor: pointer;
-}
-#rooms {
-    grid-template-columns: 1fr;
-}
-  .content {
-      margin-left: 0;
-      padding: 15px;
-      transition: margin-left 0.3s;
-  }
-  .main-content {
-      grid-template-columns: 1fr;
-  }
-  .topleft-content,
-  .topright-content,
-  .midleft-content,
-  .midright-content {
-      grid-column: span 1;
-      margin: 10px;
-  }
-  .img1, .img2 {
-      max-height: 200px;
-  }
-  header {
-      margin-left: 20px;
-      padding-top: 50px;
-  }
-  header h1 {
-    font-size: 1.8em;
-}
-
-header h2 {
-    font-size: 1em;
-}
-
-.room {
-    margin: 10px 0;
-}
-  footer {
-      grid-template-columns: 1fr;
-  }
-    
-  .footer-column {
-      margin-bottom: 20px;
-  }
-  
-}
-
-/* Add hamburger menu button */
-.menu-btn {
-  display: none;
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 999;
-  background: #333;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .main-images {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media (max-width: 767px) {
-  .menu-btn {
-      display: block;
-  }
-  .menu-btn.hide {
-      display: none;
-  }
-}
-
-/* Add close button for sidebar */
-.close-btn {
-  display: none;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-}
-
-@media (max-width: 767px) {
-  .close-btn {
-      display: block;
-  }
-}
-
-/* Additional Responsive Adjustments */
-@media (max-width: 480px) {
-  .content {
-      padding: 10px;
-  }
-
   .main-content {
-    margin: 5px;
-  }
-  
-  header {
-      margin-bottom: 20px;
-  }
-  
-  .room {
-      padding: 10px;
-  }
-  
-  .room img {
-      height: 180px;
-  }
-  
-  .room h3 {
-      font-size: 1.3em;
-  }
-
-  .topleft-content,
+        display: block;
+        margin: 15px 0;
+    }
+    .topleft-content,
     .topright-content,
     .midleft-content,
     .midright-content {
-        margin: 5px;
+        margin: 10px 0;
     }
-
-    header h1 {
-        font-size: 24px;
-    }
-
-    header h2 {
-        font-size: 14px;
-    }
-
     .img1, .img2 {
-        max-height: 200px;
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 10px;
     }
-
-    .topright-content h1,
-    .midleft-content h1 {
-        font-size: 24px;
+    header {
+        margin-left: 0;
+        text-align: center;
+    }
+    .navbar-content {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+    }
+    .nav-links {
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+    }
+    .nav-buttons {
+        margin-top: 10px;
+    }
+    footer {
+        display: block;
+        text-align: center;
+    }
+    .footer-column {
+        margin-bottom: 20px;
     }
 }
 
-/* General Screen Size Adjustments */
-html {
-  scroll-behavior: smooth;
+@media (max-width: 600px) {
+    .main-images {
+        grid-template-columns: 1fr;
+    }
+    .room {
+        margin-bottom: 20px;
+        padding: 10px;
+    }
+    .content {
+        padding: 10px;
+    }
 }
 
-img {
-  max-width: 100%;
+/* Hide navbar on mobile by default */
+@media (max-width: 767px) {
+    .navbar {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 70vw;
+        height: 100vh;
+        background: #333;
+        flex-direction: column;
+        z-index: 2000;
+        box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+        animation: slideIn 0.3s;
+    }
+    .navbar.show {
+        display: flex;
+    }
+    .navbar-content {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 30px 20px;
+        width: 100%;
+    }
+    .nav-links {
+        flex-direction: column;
+        gap: 18px;
+        width: 100%;
+    }
+    .nav-buttons {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        margin-top: 20px;
+    }
+    .menu-btn {
+        display: block;
+    }
+    .content {
+        margin-top: 70px;
+    }
 }
 
-/* Footer Grid for larger screens */
-@media (min-width: 768px) {
-  footer {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-  }
+@keyframes slideIn {
+    from { transform: translateX(-100%);}
+    to { transform: translateX(0);}
 }
