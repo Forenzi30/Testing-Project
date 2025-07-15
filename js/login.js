@@ -15,6 +15,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Simulate successful login (you can replace this with actual authentication logic)
         alert('Login successful! Welcome, ' + username + '!');
-        window.location.href = 'dashboard.html'; // Redirect to a dashboard or another page
+        window.location.href = 'index.html'; // Redirect to a dashboard or another page
     });
 });
