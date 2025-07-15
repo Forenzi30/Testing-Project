@@ -24,6 +24,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Simulate successful registration
         alert('Registration successful! Welcome, ' + username + '!');
-        window.location.href = 'welcome.html';
+        window.location.href = 'index.html';
     });
 });
