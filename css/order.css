@@ -142,13 +142,30 @@ header h1 {
 
 /* Image Main Content */
 .main-content {
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
+  display: flex;
+  flex-direction: row;
   gap: 32px;
-  align-items: start;
+  align-items: flex-start;
   padding: 32px;
   background: rgba(255,255,255,0.95);
   border-radius: 12px;
+}
+
+/* Left panel: image + desc */
+.left-panel {
+  flex: 1 1 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Right panel: form fields */
+.right-panel {
+  flex: 2 1 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
 .content-box {
@@ -310,6 +327,7 @@ header h1 {
   padding: 20px;
   line-height: 1.6;
   box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  text-align: justify;
 }
 
 .form-fields {
@@ -357,21 +375,13 @@ footer {
 /* Tablet: Reduce padding and gap */
 @media (max-width: 1024px) {
   .main-content {
-    grid-template-columns: 1fr;
+    flex-direction: column;
     gap: 20px;
     padding: 16px;
   }
-  .img {
-    grid-column: 1 / 2;
-    margin-bottom: 16px;
-  }
-  .order-box {
-    grid-column: 1 / 2;
-  }
-  .desc {
-    grid-column: 1 / 2;
-    margin-top: 16px;
-    padding: 16px;
+  .left-panel, .right-panel {
+    width: 100%;
+    align-items: stretch;
   }
 }
 
@@ -399,10 +409,15 @@ footer {
     padding: 12px 8px;
   }
   .desc {
+    margin-top: 24px;
     width: 100%;
-    margin-top: 10px;
-    padding: 12px;
-    font-size: 0.95rem;
+    background: #fff;
+    border-radius: 8px;
+    font-size: 1rem;
+    padding: 20px;
+    line-height: 1.6;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    text-align: justify;
   }
 }
 
