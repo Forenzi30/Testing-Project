@@ -1,0 +1,26 @@
+{
+  "name": "testing-project",
+  "version": "1.0.0",
+  "description": "This web application is designed as a final project material on campus.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Forenzi30/Testing-Project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Forenzi30/Testing-Project/issues"
+  },
+  "homepage": "https://github.com/Forenzi30/Testing-Project#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0",
+    "pg": "^8.16.3"
+  }
+}

@@ -119,9 +119,11 @@
                         <br>
                         <input type="radio" class="room-btn" name="room" value="Executive">
                         <label>Executive Suite</label>
+                        <!-- Tambahkan elemen berikut untuk status ketersediaan -->
+                        <div id="room-availability-status" style="margin-top:10px; font-weight:bold;"></div>
                     </div>
                     <div class="order-box order-action">
-                        <button onclick="submitForm(event)" class="order-btn">ORDER</button>
+                        <button class="order-btn">ORDER</button>
                         <p class="order-desc">
                             Order Your Seaside Escape: Where Waves Meet Wonders! Reserve Your Slice of Paradise at LuxeLeaf Glampsite – Your Passport to Coastal Bliss.
                         </p>
@@ -158,5 +160,35 @@
     <script src="./js/index.js"></script>
     <script src="js/login_check.js"></script>
     <script src="js/menubtn.js"></script>
+    <script src="js/room_availability.js"></script>
+    <script src="js/order_payment.js"></script>
+</body>
+</html>
+        const roomType = this.value;
+        const statusDiv = document.getElementById('room-availability-status');
+        statusDiv.textContent = 'Checking availability...';
+        fetch(`/api/room-availability?roomType=${encodeURIComponent(roomType)}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.available) {
+                    statusDiv.textContent = 'Room available!';
+                    statusDiv.style.color = 'green';
+                    document.querySelector('.order-btn').disabled = false;
+                } else {
+                    statusDiv.textContent = 'Room not available!';
+                    statusDiv.style.color = 'red';
+                    document.querySelector('.order-btn').disabled = true;
+                }
+            })
+            .catch(() => {
+                statusDiv.textContent = 'Error checking availability';
+                statusDiv.style.color = 'orange';
+                document.querySelector('.order-btn').disabled = true;
+            });
+    });
+});
+// Optional: Disable order button by default until room checked
+document.querySelector('.order-btn').disabled = true;
+</script>
 </body>
 </html>

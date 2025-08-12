@@ -597,3 +597,7 @@ footer {
     from { transform: translateX(-100%);}
     to { transform: translateX(0);}
 }
+
+.Event .gallery {
+    margin-bottom: 40px; /* Add space between event pictures and footer */
+}

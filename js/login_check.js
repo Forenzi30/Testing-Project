@@ -1,13 +1,15 @@
-// Simple login state management
+// Update tampilan tombol login/logout di navbar
 function updateNav() {
     const loginBtn = document.querySelector('a[href="login.html"]');
     if (!loginBtn) return;
+
     if (localStorage.getItem('isLoggedIn') === 'true') {
         loginBtn.textContent = 'Logout';
         loginBtn.href = '#';
-        loginBtn.onclick = function(e) {
+        loginBtn.onclick = function (e) {
             e.preventDefault();
             localStorage.setItem('isLoggedIn', 'false');
+            localStorage.removeItem('username');
             updateNav();
         };
     } else {
@@ -15,12 +17,6 @@ function updateNav() {
         loginBtn.href = 'login.html';
         loginBtn.onclick = null;
     }
-}
-
-// Simulate login after visiting login.html (for demo)
-if (window.location.pathname.endsWith('login.html')) {
-    localStorage.setItem('isLoggedIn', 'true');
-    window.location.href = 'index.html';
 }
 
 updateNav();

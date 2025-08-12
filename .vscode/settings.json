@@ -1,0 +1,17 @@
+{
+    "sqltools.connections": [
+        {
+            "pgOptions": {
+                "statement_timeout": 0
+            },
+            "previewLimit": 50,
+            "server": "shuttle.proxy.rlwy.net",
+            "port": 27292,
+            "askForPassword": true,
+            "driver": "PostgreSQL",
+            "database": "railway",
+            "name": "Railway PostgreSQL",
+            "username": "postgres"
+        }
+    ]
+}
