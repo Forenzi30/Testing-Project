@@ -39,15 +39,15 @@ app.get('/api/room-availability', async (req, res) => {
 
 // ==================== REGISTER ====================
 app.post('/register', async (req, res) => {
-    const { username, email, phone_number, password } = req.body;
+    const { username, email, phone, password } = req.body;
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         await pool.query(
-            `INSERT INTO login (username, email, phone_number, password, create_at)
+            `INSERT INTO pelanggan (username, email, phone, password, create_at)
              VALUES ($1, $2, $3, $4, CURRENT_DATE)`,
-            [username, email, phone_number, hashedPassword]
+            [username, email, phone, hashedPassword]
         );
 
         res.json({ success: true, message: 'Registrasi berhasil' });
@@ -59,16 +59,16 @@ app.post('/register', async (req, res) => {
 
 // Endpoint register pelanggan
 app.post('/api/register', async (req, res) => {
-    const { username, password, email, phone_number } = req.body;
+    const { username, password, email, phone } = req.body;
     console.log('Register attempt:', req.body); // Debug: log data masuk
-    if (!username || !password || !email || !phone_number) {
+    if (!username || !password || !email || !phone) {
         return res.status(400).json({ success: false, message: 'Missing fields' });
     }
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         const result = await pool.query(
-            'INSERT INTO pelanggan (username, email, phone_number, password, create_at) VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP) RETURNING *',
-            [username, email, phone_number, hashedPassword]
+            'INSERT INTO pelanggan (username, email, phone, password, create_at) VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP) RETURNING *',
+            [username, email, phone, hashedPassword]
         );
         console.log('Inserted pelanggan:', result.rows[0]); // Debug: log hasil insert
         res.json({ success: true, message: 'Pelanggan registered' });
@@ -84,7 +84,7 @@ app.post('/login', async (req, res) => {
 
     try {
         const result = await pool.query(
-            `SELECT * FROM login WHERE username = $1`,
+            `SELECT * FROM pelanggan WHERE username = $1`,
             [username]
         );
 
