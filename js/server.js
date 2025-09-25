@@ -5,6 +5,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const pool = require('./db');
 const bcrypt = require('bcrypt');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,6 +17,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json()); // harus ada sebelum endpoint
 
 app.use(express.static("public"));
+
+// Serve your real index.html for the root route
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views/index.html'));
+});
 
 // ==================== API CEK KAMAR ====================
 app.get('/api/room-availability', async (req, res) => {
