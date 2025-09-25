@@ -1,16 +1,14 @@
 require('dotenv').config();
-const { Pool } = require('pg');
+const mysql = require('mysql2/promise');
 
-// Use DATABASE_URL if available, otherwise use individual PG* variables
-const pool = new Pool(
-    {
-        host: process.env.PGHOST,
-        port: process.env.PGPORT,
-        user: process.env.PGUSERNAME,
-        password: process.env.PGPASSWORD,
-        database: process.env.PGDATABASE,
-        ssl: { rejectUnauthorized: false }
-      }
-);
+const pool = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+});
 
 module.exports = pool;

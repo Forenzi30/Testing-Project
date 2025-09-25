@@ -14,8 +14,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         try {
+            // Get backend URL from .env via window.env (use env.js loader)
+            const backendUrl = window.env && window.env.BACKEND_URL ? window.env.BACKEND_URL : 'http://localhost:3000';
             // Kirim data ke server
-            const response = await fetch('https://testing-project-production-990b.up.railway.app/login', {
+            const response = await fetch(backendUrl + '/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })

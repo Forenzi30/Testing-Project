@@ -15,6 +15,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json()); // harus ada sebelum endpoint
 
+app.use(express.static("public"));
+
 // ==================== API CEK KAMAR ====================
 app.get('/api/room-availability', async (req, res) => {
     const roomType = req.query.roomType;
@@ -39,36 +41,37 @@ app.get('/api/room-availability', async (req, res) => {
 
 // ==================== REGISTER ====================
 app.post('/register', async (req, res) => {
-    const { username, email, phone, password } = req.body;
-
+    console.log('Register body:', req.body); // Debug: log incoming data
+    const { username, email, phone_number, password } = req.body;
+    if (!username || !email || !phone_number || !password) {
+        return res.status(400).json({ success: false, message: `Missing fields: username=${username}, email=${email}, phone_number=${phone_number}, password=${password}` });
+    }
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-
-        await pool.query(
-            `INSERT INTO pelanggan (username, email, phone, password, create_at)
-             VALUES ($1, $2, $3, $4, CURRENT_DATE)`,
-            [username, email, phone, hashedPassword]
+        await pool.execute(
+            `INSERT INTO pelanggan (username, email, phone_number, password, create_at)
+             VALUES (?, ?, ?, ?, CURRENT_DATE)`,
+            [username, email, phone_number, hashedPassword]
         );
-
         res.json({ success: true, message: 'Registrasi berhasil' });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ success: false, message: 'Gagal registrasi' });
+        console.error('Register error:', err);
+        res.status(500).json({ success: false, message: err.message });
     }
 });
 
 // Endpoint register pelanggan
 app.post('/api/register', async (req, res) => {
-    const { username, password, email, phone } = req.body;
+    const { username, password, email, phone_number } = req.body;
     console.log('Register attempt:', req.body); // Debug: log data masuk
-    if (!username || !password || !email || !phone) {
+    if (!username || !password || !email || !phone_number) {
         return res.status(400).json({ success: false, message: 'Missing fields' });
     }
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        const result = await pool.query(
-            'INSERT INTO pelanggan (username, email, phone, password, create_at) VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP) RETURNING *',
-            [username, email, phone, hashedPassword]
+        const [result] = await pool.execute(
+            'INSERT INTO pelanggan (username, email, phone_number, password, create_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)',
+            [username, email, phone_number, hashedPassword]
         );
         console.log('Inserted pelanggan:', result.rows[0]); // Debug: log hasil insert
         res.json({ success: true, message: 'Pelanggan registered' });
@@ -81,24 +84,19 @@ app.post('/api/register', async (req, res) => {
 // ==================== LOGIN ====================
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
-
     try {
-        const result = await pool.query(
-            `SELECT * FROM pelanggan WHERE username = $1`,
+        const [rows] = await pool.execute(
+            `SELECT * FROM pelanggan WHERE username = ?`,
             [username]
         );
-
-        if (result.rows.length === 0) {
+        if (rows.length === 0) {
             return res.json({ success: false, message: 'Username tidak ditemukan' });
         }
-
-        const user = result.rows[0];
+        const user = rows[0];
         const match = await bcrypt.compare(password, user.password);
-
         if (!match) {
             return res.json({ success: false, message: 'Password salah' });
         }
-
         res.json({ success: true, message: 'Login berhasil' });
     } catch (err) {
         console.error(err);

@@ -26,19 +26,22 @@ document.addEventListener('DOMContentLoaded', function () {
         const userData = {
             username,
             email,
-            phone,
+            phone_number: phone,
             password,
         };
 
+        // Get backend URL from .env via window.env (use env.js loader)
+        const backendUrl = window.env && window.env.BACKEND_URL ? window.env.BACKEND_URL : 'http://localhost:3000';
+
         // Send the data to the backend via POST request using fetch
-        fetch('postgresql://postgres:xabVzSgZVvaxFEpIsSnoepZNDkoNBsQu@shuttle.proxy.rlwy.net:25968/railway', {  // Use your backend server URL here
+        fetch(backendUrl + '/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(userData),  // Send the user data as a JSON string
+            body: JSON.stringify(userData),
         })
-        .then(response => response.json())  // Parse the response as JSON
+        .then(response => response.json())
         .then(data => {
             if (data.success) {
                 // Registration successful
