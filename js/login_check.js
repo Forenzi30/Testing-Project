@@ -11,6 +11,7 @@ function updateNav() {
             localStorage.setItem('isLoggedIn', 'false');
             localStorage.removeItem('username');
             updateNav();
+            location.reload(); // Force refresh after logout
         };
     } else {
         loginBtn.textContent = 'Login';

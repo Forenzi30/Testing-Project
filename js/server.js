@@ -28,21 +28,21 @@ app.get('/', (req, res) => {
 app.get('/api/room-availability', async (req, res) => {
     const roomType = req.query.roomType;
     if (!roomType) {
-        return res.status(400).json({ available: false });
+        return res.status(400).json({ available: false, stock: 0 });
     }
     try {
-        // MySQL query
+        // Return actual stock count
         const [rows] = await pool.execute(
-            'SELECT stock FROM rooms WHERE type = ? LIMIT 1',
+            'SELECT stok FROM rooms WHERE tipe = ? LIMIT 1',
             [roomType]
         );
-        if (rows.length > 0 && rows[0].stock > 0) {
-            res.json({ available: true });
+        if (rows.length > 0) {
+            res.json({ available: rows[0].stok > 0, stock: rows[0].stok });
         } else {
-            res.json({ available: false });
+            res.json({ available: false, stock: 0 });
         }
     } catch (err) {
-        res.status(500).json({ available: false, error: err.message });
+        res.status(500).json({ available: false, stock: 0, error: err.message });
     }
 });
 
@@ -87,6 +87,44 @@ app.post('/login', async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: 'Gagal login' });
+    }
+});
+
+// ==================== ORDER ROOM ====================
+app.post('/api/order-room', async (req, res) => {
+    const { username, roomType } = req.body;
+    if (!username || !roomType) {
+        return res.status(400).json({ success: false, message: 'Missing username or roomType' });
+    }
+    try {
+        // Check if user exists
+        const [userRows] = await pool.execute(
+            'SELECT * FROM pelanggan WHERE username = ?',
+            [username]
+        );
+        if (userRows.length === 0) {
+            return res.status(401).json({ success: false, message: 'User must login first' });
+        }
+
+        // Check room availability
+        const [roomRows] = await pool.execute(
+            'SELECT stok FROM rooms WHERE tipe = ? LIMIT 1',
+            [roomType]
+        );
+        if (roomRows.length === 0 || roomRows[0].stok <= 0) {
+            return res.status(400).json({ success: false, message: 'Room not available' });
+        }
+
+        // Decrement stock
+        await pool.execute(
+            'UPDATE rooms SET stok = stok - 1 WHERE tipe = ? AND stok > 0',
+            [roomType]
+        );
+
+        res.json({ success: true, message: 'Room ordered successfully!' });
+    } catch (err) {
+        console.error('Order error:', err);
+        res.status(500).json({ success: false, message: err.message });
     }
 });
 
