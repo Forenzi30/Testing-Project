@@ -65,10 +65,12 @@ app.post('/api/register', async (req, res) => {
             'INSERT INTO pelanggan (username, email, phone_number, password, create_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)',
             [username, email, phone_number, hashedPassword]
         );
+        console.log('Insert result:', result); // Debug: log SQL result
         res.json({ success: true, message: 'Pelanggan registered' });
     } catch (err) {
         console.error('Register error:', err); // Debug: log error
-        res.status(500).json({ success: false, message: err.message });
+        // Add error code for easier debugging
+        res.status(500).json({ success: false, message: err.message, code: err.code });
     }
 });
 
