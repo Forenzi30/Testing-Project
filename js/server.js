@@ -16,13 +16,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json()); // harus ada sebelum endpoint
 
-// Serve static files
-app.use(express.static("public"));
+// Serve static files from the project root
+app.use(express.static(path.join(__dirname, '..')));
 
 // Serve your custom index.html for the root route
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/index.html'));
+    res.sendFile(path.join(__dirname, '../index.html'));
 });
+
+// Optional: SPA fallback for client-side routing (uncomment if needed)
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, '../index.html'));
+// });
 
 // ==================== API CEK KAMAR ====================
 app.get('/api/room-availability', async (req, res) => {
