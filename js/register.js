@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const username = document.getElementById('username').value;
         const email = document.getElementById('email').value;
-        const phone = document.getElementById('phone').value;
+        const phone = document.getElementById('phone_number').value;
         const password = document.getElementById('password').value;
 
         // Simple client-side validation

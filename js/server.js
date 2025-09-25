@@ -60,27 +60,6 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// Endpoint register pelanggan
-app.post('/api/register', async (req, res) => {
-    const { username, password, email, phone_number } = req.body;
-    console.log('Register attempt:', req.body); // Debug: log data masuk
-    if (!username || !password || !email || !phone_number) {
-        return res.status(400).json({ success: false, message: 'Missing fields' });
-    }
-    try {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const [result] = await pool.execute(
-            'INSERT INTO pelanggan (username, email, phone_number, password, create_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)',
-            [username, email, phone_number, hashedPassword]
-        );
-        console.log('Inserted pelanggan:', result.rows[0]); // Debug: log hasil insert
-        res.json({ success: true, message: 'Pelanggan registered' });
-    } catch (err) {
-        console.error('Register error:', err); // Debug: log error
-        res.status(500).json({ success: false, message: err.message });
-    }
-});
-
 // ==================== LOGIN ====================
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
