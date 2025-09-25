@@ -24,12 +24,12 @@ app.get('/api/room-availability', async (req, res) => {
         return res.status(400).json({ available: false });
     }
     try {
-        // Contoh query: sesuaikan nama tabel/kolom dengan database Anda
-        const result = await pool.query(
-            'SELECT stock FROM rooms WHERE type = $1 LIMIT 1',
+        // MySQL query
+        const [rows] = await pool.execute(
+            'SELECT stock FROM rooms WHERE type = ? LIMIT 1',
             [roomType]
         );
-        if (result.rows.length > 0 && result.rows[0].stock > 0) {
+        if (rows.length > 0 && rows[0].stock > 0) {
             res.json({ available: true });
         } else {
             res.json({ available: false });
@@ -40,22 +40,22 @@ app.get('/api/room-availability', async (req, res) => {
 });
 
 // ==================== REGISTER ====================
-app.post('/register', async (req, res) => {
-    console.log('Register body:', req.body); // Debug: log incoming data
-    const { username, email, phone_number, password } = req.body;
-    if (!username || !email || !phone_number || !password) {
-        return res.status(400).json({ success: false, message: `Missing fields: username=${username}, email=${email}, phone_number=${phone_number}, password=${password}` });
+// Endpoint register pelanggan
+app.post('/api/register', async (req, res) => {
+    const { username, password, email, phone_number } = req.body;
+    console.log('Register attempt:', req.body); // Debug: log data masuk
+    if (!username || !password || !email || !phone_number) {
+        return res.status(400).json({ success: false, message: 'Missing fields' });
     }
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        await pool.execute(
-            `INSERT INTO pelanggan (username, email, phone_number, password, create_at)
-             VALUES (?, ?, ?, ?, CURRENT_DATE)`,
+        const [result] = await pool.execute(
+            'INSERT INTO pelanggan (username, email, phone_number, password, create_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)',
             [username, email, phone_number, hashedPassword]
         );
-        res.json({ success: true, message: 'Registrasi berhasil' });
+        res.json({ success: true, message: 'Pelanggan registered' });
     } catch (err) {
-        console.error('Register error:', err);
+        console.error('Register error:', err); // Debug: log error
         res.status(500).json({ success: false, message: err.message });
     }
 });

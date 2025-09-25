@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const backendUrl = window.env && window.env.BACKEND_URL ? window.env.BACKEND_URL : 'http://localhost:3000';
 
         // Send the data to the backend via POST request using fetch
-        fetch(backendUrl + '/register', {
+        fetch(backendUrl + '/api/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

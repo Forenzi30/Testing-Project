@@ -4,7 +4,8 @@
   "description": "This web application is designed as a final project material on campus.",
   "main": "index.js",
   "scripts": {
-    "start": "node js/server.js"
+    "start": "node js/server.js",
+    "dev": "nodemon js/server.js"
   },
   "repository": {
     "type": "git",
@@ -24,5 +25,8 @@
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "mysql2": "^3.15.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
