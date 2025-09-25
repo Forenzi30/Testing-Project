@@ -16,9 +16,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json()); // harus ada sebelum endpoint
 
+// Serve static files
 app.use(express.static("public"));
 
-// Serve your real index.html for the root route
+// Serve your custom index.html for the root route
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../views/index.html'));
 });
