@@ -30,8 +30,8 @@ document.addEventListener('DOMContentLoaded', function () {
             password,
         };
 
-        // Get backend URL from .env via window.env (use env.js loader)
-        const backendUrl = window.env && window.env.BACKEND_URL ? window.env.BACKEND_URL : 'http://localhost:3000';
+        // Set your Railway backend URL here
+        const backendUrl = 'mysql://root:GYOOIuXcGXVbRkdSfXzvfculMostkCTR@mainline.proxy.rlwy.net:13550/railway'; // <-- replace with your Railway URL
 
         // Send the data to the backend via POST request using fetch
         fetch(backendUrl + '/api/register', {
