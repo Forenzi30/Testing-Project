@@ -62,7 +62,7 @@ app.post('/api/register', async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         const [result] = await pool.execute(
-            'INSERT INTO pelanggan (username, email, phone_number, password, create_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)',
+            'INSERT INTO pelanggan (username, email, phone_number, password, created_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)',
             [username, email, phone_number, hashedPassword]
         );
         console.log('Insert result:', result); // Debug: log SQL result
