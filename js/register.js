@@ -30,8 +30,8 @@ document.addEventListener('DOMContentLoaded', function () {
             password,
         };
 
-        // Set your Railway backend URL here
-        const backendUrl = 'mysql://root:GYOOIuXcGXVbRkdSfXzvfculMostkCTR@mainline.proxy.rlwy.net:13550/railway'; // <-- replace with your Railway URL
+        // Set your Railway backend API URL here (NOT the database connection string)
+        const backendUrl = 'https://your-railway-app-production.up.railway.app'; // <-- replace with your Railway backend API URL
 
         // Send the data to the backend via POST request using fetch
         fetch(backendUrl + '/api/register', {
