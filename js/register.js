@@ -30,8 +30,8 @@ document.addEventListener('DOMContentLoaded', function () {
             password,
         };
 
-        // Set your Railway backend API base URL here (without /api/register)
-        const backendUrl = 'mainline.proxy.rlwy.net:13550';
+        // Set your backend API base URL for XAMPP (localhost)
+        const backendUrl = 'http://localhost:3000';
 
         // Send the data to the backend via POST request using fetch
         fetch(backendUrl + '/api/register', {
