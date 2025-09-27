@@ -30,8 +30,8 @@ document.addEventListener('DOMContentLoaded', function () {
             password,
         };
 
-        // Set your Railway backend API URL here (NOT the database connection string)
-        const backendUrl = 'https://testing-project-production-85d6.up.railway.app/api/register'; // <-- replace with your Railway backend API URL
+        // Set your Railway backend API base URL here (without /api/register)
+        const backendUrl = 'https://testing-project-production-85d6.up.railway.app';
 
         // Send the data to the backend via POST request using fetch
         fetch(backendUrl + '/api/register', {
