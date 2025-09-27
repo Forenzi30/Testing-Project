@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         // Set your Railway backend API base URL here (without /api/register)
-        const backendUrl = 'https://testing-project-production-85d6.up.railway.app';
+        const backendUrl = 'mainline.proxy.rlwy.net:13550';
 
         // Send the data to the backend via POST request using fetch
         fetch(backendUrl + '/api/register', {
