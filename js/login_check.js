@@ -1,35 +1,24 @@
-// Update tampilan tombol login/logout di navbar dan tampilkan link profile jika login
+// Update tampilan tombol login/logout di navbar
 function updateNav() {
     const loginBtn = document.querySelector('a[href="login.html"]');
     const navLinks = document.querySelector('.nav-links');
-    let profileLink = document.querySelector('a[href="profile.html"]');
     let orderLink = document.querySelector('a[href="order.html"]');
 
     if (!loginBtn || !navLinks) return;
 
     if (localStorage.getItem('isLoggedIn') === 'true') {
-        // Show Profile link if not present
-        if (!profileLink) {
-            profileLink = document.createElement('a');
-            profileLink.href = 'profile.html';
-            profileLink.textContent = 'Profile';
-            profileLink.className = 'nav-btn profile-link';
-            // Insert before login/logout button if possible
-            loginBtn.parentNode.insertBefore(profileLink, loginBtn);
-        } else {
-            profileLink.style.display = '';
-        }
         // Show Order link if not present
         if (!orderLink) {
             orderLink = document.createElement('a');
             orderLink.href = 'order.html';
             orderLink.textContent = 'Order';
             orderLink.className = 'nav-btn order-link';
-            loginBtn.parentNode.insertBefore(orderLink, profileLink || loginBtn);
+            loginBtn.parentNode.insertBefore(orderLink, loginBtn);
         } else {
             orderLink.style.display = '';
         }
 
+        // Show Logout button
         loginBtn.textContent = 'Logout';
         loginBtn.href = '#';
         loginBtn.onclick = function (e) {
@@ -37,10 +26,26 @@ function updateNav() {
             localStorage.setItem('isLoggedIn', 'false');
             localStorage.removeItem('username');
             updateNav();
-            location.reload(); // Force refresh after logout
+            // If on order.html, redirect to index.html after logout
+            if (window.location.pathname.endsWith('order.html')) {
+                window.location.href = 'index.html';
+            } else {
+                location.reload(); // Force refresh after logout
+            }
         };
     } else {
-        // Hide Profile link if present
+        // Hide Order link if present
+        if (orderLink) {
+            orderLink.style.display = 'none';
+        }
+        // Show Login button
+        loginBtn.textContent = 'Login';
+        loginBtn.href = 'login.html';
+        loginBtn.onclick = null;
+    }
+}
+
+updateNav();
         if (profileLink) {
             profileLink.style.display = 'none';
         }
@@ -51,7 +56,7 @@ function updateNav() {
         loginBtn.textContent = 'Login';
         loginBtn.href = 'login.html';
         loginBtn.onclick = null;
-    }
-}
+
+
 
 updateNav();
