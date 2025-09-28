@@ -69,8 +69,8 @@ app.post('/api/register', async (req, res) => {
         res.json({ success: true, message: 'Pelanggan registered' });
     } catch (err) {
         console.error('Register error:', err); // Debug: log error
-        // Add error code for easier debugging
-        res.status(500).json({ success: false, message: err.message, code: err.code });
+        // Add error code and stack for easier debugging
+        res.status(500).json({ success: false, message: err.message, code: err.code, stack: err.stack });
     }
 });
 

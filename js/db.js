@@ -1,7 +1,7 @@
 require('dotenv').config();
 const mysql = require('mysql2/promise');
 
-// Choose connection config based on USE_RAILWAY env variable
+// Use Railway or XAMPP config based on USE_RAILWAY in .env
 const useRailway = process.env.USE_RAILWAY === 'true';
 
 const pool = mysql.createPool(
