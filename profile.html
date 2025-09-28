@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="css/profile.css">
+    <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <button class="menu-btn" id="menuBtn">☰</button>
+    <nav class="navbar" id="navbar">
+        <div class="navbar-content">
+            <a href="index.html" class="logo-link">
+                <img height="60" src="./images/Logo1.png" width="60" alt="" class="logo">
+            </a>
+            <ul class="nav-links">
+                <li><a href="room page.html">Rooms</a></li>
+                <li><a href="food&drink.html">Food & Drink</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="Event.html">Events</a></li>
+                <li><a href="contactUs.html">Contact</a></li>
+                <li><a href="About.html" target="_blank">About</a></li>
+                <li><a href="history.html">History</a></li>
+            </ul>
+            <div class="nav-buttons">
+                <a href="order.html" class="nav-btn">Order</a>
+                <a href="profile.html" class="nav-btn">Profile</a>
+                <a href="login.html" class="nav-btn">Logout</a>
+            </div>
+        </div>
+    </nav>
+    <div class="profile-main-container">
+        <div class="profile-header">
+            <div class="profile-picture" id="profile-picture">
+                <span id="profile-initials">?</span>
+            </div>
+            <div class="profile-header-info">
+                <h2 id="profile-name-header">Your Name</h2>
+                <p id="profile-username-header">@username</p>
+            </div>
+        </div>
+        <form id="profile-form">
+            <div class="profile-section">
+                <div class="profile-section-title">Basic info</div>
+                <div class="profile-info-row">
+                    <div class="profile-info-label">Username</div>
+                    <input type="text" id="profile-username" name="username" class="profile-info-value" readonly>
+                </div>
+                <div class="profile-info-row">
+                    <div class="profile-info-label">Name</div>
+                    <input type="text" id="profile-name" name="name" class="profile-info-value" readonly>
+                </div>
+            </div>
+            <div class="profile-section">
+                <div class="profile-section-title">Contact info</div>
+                <div class="profile-info-row">
+                    <div class="profile-info-label">Email</div>
+                    <input type="email" id="profile-email" name="email" class="profile-info-value" readonly>
+                </div>
+                <div class="profile-info-row">
+                    <div class="profile-info-label">Phone</div>
+                    <input type="text" id="profile-phone" name="phone_number" class="profile-info-value" readonly>
+                </div>
+                <div class="profile-info-row">
+                    <div class="profile-info-label">Address</div>
+                    <input type="text" id="profile-address" name="address" class="profile-info-value" readonly>
+                </div>
+            </div>
+            <div class="profile-section" id="password-section" style="display:none;">
+                <div class="profile-section-title">Change Password</div>
+                <div class="profile-info-row">
+                    <div class="profile-info-label">New Password</div>
+                    <input type="password" id="profile-password" name="password" class="profile-info-value editable" placeholder="Leave blank to keep current">
+                </div>
+            </div>
+            <div>
+                <button type="button" id="edit-profile-btn" class="blue-btn">Edit</button>
+                <button type="submit" id="save-profile-btn" class="blue-btn" style="display:none;">Save</button>
+                <button type="button" id="cancel-edit-btn" class="blue-btn" style="display:none;">Cancel</button>
+                <div id="profile-message"></div>
+            </div>
+        </form>
+    </div>
+    <script src="js/login_check.js"></script>
+    <script src="js/menubtn.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f6f6f6;
+    margin: 0;
+    padding: 0;
+}
+nav {
+    background: #25344a;
+    padding: 0;
+    margin: 0;
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.navbar-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+.logo-link {
+    display: flex;
+    align-items: center;
+    margin-right: 24px;
+}
+.logo {
+    border-radius: 50%;
+}
+.nav-links {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex: 1;
+}
+.nav-links li {
+    margin-right: 18px;
+}
+.nav-links li:last-child {
+    margin-right: 0;
+}
+.nav-links a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1em;
+    padding: 8px 0;
+    transition: color 0.2s;
+}
+.nav-links a:hover,
+.nav-links a.active {
+    color: #4da3ff;
+    text-decoration: underline;
+}
+.nav-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.nav-btn, .blue-btn {
+    background: #4da3ff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 1em;
+    padding: 8px 18px;
+    margin-right: 0;
+    margin-top: 0;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
+.nav-btn:last-child, .blue-btn:last-child {
+    margin-right: 0;
+}
+.nav-btn:hover, .blue-btn:hover {
+    background: #1e7fd6;
+    color: #fff;
+}
+.profile-main-container {
+    max-width: 700px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+    padding: 32px 32px 24px 32px;
+}
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+.profile-picture {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+    color: #888;
+    position: relative;
+    overflow: hidden;
+}
+.profile-picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.profile-header-info {
+    flex: 1;
+}
+.profile-header-info h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+.profile-header-info p {
+    margin: 0;
+    color: #666;
+    font-size: 1em;
+}
+.profile-section {
+    margin-bottom: 28px;
+}
+.profile-section-title {
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #333;
+}
+.profile-info-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 14px;
+}
+.profile-info-label {
+    width: 140px;
+    color: #666;
+    font-size: 1em;
+}
+.profile-info-value {
+    flex: 1;
+    color: #222;
+    font-size: 1em;
+    background: none;
+    border: none;
+    padding: 0;
+}
+.profile-info-value[readonly] {
+    background: none;
+    border: none;
+}
+.profile-info-value.editable {
+    background: #f3f3f3;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    padding: 6px 10px;
+}
+#edit-profile-btn, #save-profile-btn, #cancel-edit-btn {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 4px;
+    background: #2d3e50;
+    color: #fff;
+    font-size: 1em;
+    cursor: pointer;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+#edit-profile-btn:hover, #save-profile-btn:hover, #cancel-edit-btn:hover {
+    background: #1a2533;
+}
+#profile-message {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 15px;
+}
+.blue-btn {
+    background: #4da3ff !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 6px !important;
+    font-weight: bold;
+    font-size: 1em;
+    padding: 8px 18px !important;
+    margin-right: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.blue-btn:hover {
+    background: #1e7fd6 !important;
+}
+@media (max-width: 900px) {
+    .navbar-content {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0 8vw;
+    }
+    .nav-links {
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+    }
+}
+@media (max-width: 700px) {
+    .profile-main-container {
+        padding: 16px 4vw;
+    }
+    .profile-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+}
