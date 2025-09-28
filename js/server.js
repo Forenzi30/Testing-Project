@@ -96,15 +96,15 @@ app.post('/login', async (req, res) => {
 
 // ==================== ORDER ROOM ====================
 app.post('/api/order-room', async (req, res) => {
-    // Expecting: username, roomType, first_name, last_name, email, check_in, check_out, adults, childrens
+    // Expecting: username, roomType, name, email, check_in, check_out, adults, childrens
     const {
         username, roomType,
-        first_name, last_name, email,
+        name, email,
         check_in, check_out, adults, childrens
     } = req.body;
     console.log('Order room request for tipe:', roomType);
 
-    if (!username || !roomType || !first_name || !last_name || !email || !check_in || !check_out || !adults) {
+    if (!username || !roomType || !name || !email || !check_in || !check_out || !adults) {
         return res.status(400).json({ success: false, message: 'Missing required order fields' });
     }
 
@@ -135,13 +135,13 @@ app.post('/api/order-room', async (req, res) => {
             [room_id]
         );
 
-        // Insert order into orders table
+        // Insert order into orders table (assume column 'name' instead of first_name/last_name)
         const [orderResult] = await pool.execute(
             `INSERT INTO orders
-                (pelanggan_id, room_id, first_name, last_name, email, check_in, check_out, adults, childrens, created_at)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
+                (pelanggan_id, room_id, name, email, check_in, check_out, adults, childrens, created_at)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
             [
-                pelanggan_id, room_id, first_name, last_name, email,
+                pelanggan_id, room_id, name, email,
                 check_in, check_out, adults, childrens || 0
             ]
         );

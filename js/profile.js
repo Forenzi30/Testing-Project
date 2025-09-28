@@ -11,21 +11,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const saveBtn = document.getElementById('save-profile-btn');
     const cancelBtn = document.getElementById('cancel-edit-btn');
     const passwordSection = document.getElementById('password-section');
-
-    // Header elements
     const nameHeader = document.getElementById('profile-name-header');
     const usernameHeader = document.getElementById('profile-username-header');
-    const profilePicture = document.getElementById('profile-picture');
     const profileInitials = document.getElementById('profile-initials');
 
-    // Store original values for cancel
     let originalData = {};
 
     function fetchAndFillProfile(usernameToFetch) {
         fetch(`/api/profile?username=${encodeURIComponent(usernameToFetch)}`)
             .then(res => res.json())
             .then(data => {
-                if (data.success) {
+                if (data.success && data.user) {
                     setProfileFields(data.user);
                     setProfileHeader(data.user);
                     originalData = { ...data.user };
@@ -51,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function setProfileHeader(user) {
         nameHeader.textContent = user.name || '';
         usernameHeader.textContent = user.username ? '@' + user.username : '';
-        // Set initials
         let initials = '?';
         if (user.name) {
             const parts = user.name.trim().split(' ');
@@ -115,12 +110,10 @@ document.addEventListener('DOMContentLoaded', function () {
             if (data.success) {
                 document.getElementById('profile-password').value = '';
                 setEditable(false);
-                // If username changed, update localStorage and oldUsername, and refetch
                 if (newUsername !== oldUsername) {
                     localStorage.setItem('username', newUsername);
                     oldUsername = newUsername;
                 }
-                // Refetch to ensure data is up to date
                 fetchAndFillProfile(oldUsername);
             }
         })
@@ -130,7 +123,11 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Start in view mode and fetch data
     setEditable(false);
     fetchAndFillProfile(oldUsername);
 });
+            msgDiv.style.color = 'red';
+
+    // Start in view mode and fetch data
+    setEditable(false);
+    fetchAndFillProfile(oldUsername);

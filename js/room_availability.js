@@ -85,8 +85,7 @@ document.querySelector('.order-btn').addEventListener('click', function(event) {
     const orderData = {
         username,
         roomType: mapRoomType(roomType),
-        first_name: formData.get('first_name'),
-        last_name: formData.get('last_name'),
+        name: formData.get('name'),
         email: formData.get('email'),
         check_in: formData.get('check_in'),
         check_out: formData.get('check_out'),
@@ -112,4 +111,26 @@ document.querySelector('.order-btn').addEventListener('click', function(event) {
     .catch(() => {
         alert('Error ordering room.');
     });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    if (isLoggedIn()) {
+        const username = localStorage.getItem('username');
+        fetch(`/api/profile?username=${encodeURIComponent(username)}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // Autofill order form fields
+                    const form = document.getElementById('order-form');
+                    if (form) {
+                        form.elements['name'].value = data.user.name || '';
+                        form.elements['email'].value = data.user.email || '';
+                        // Fix: set mobile_number field from phone_number
+                        if (form.elements['mobile_number']) {
+                            form.elements['mobile_number'].value = data.user.phone_number || '';
+                        }
+                    }
+                }
+            });
+    }
 });
