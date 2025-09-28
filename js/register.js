@@ -5,12 +5,13 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault(); // Prevent the default form submission
 
         const username = document.getElementById('username').value;
+        const name = document.getElementById('name').value;
         const email = document.getElementById('email').value;
         const phone = document.getElementById('phone_number').value;
         const password = document.getElementById('password').value;
 
         // Simple client-side validation
-        if (username === '' || email === '' || phone === '' || password === '') {
+        if (username === '' || name === '' || email === '' || phone === '' || password === '') {
             alert('Please fill in all fields.');
             return;
         }
@@ -25,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Prepare the data to send to the backend
         const userData = {
             username,
+            name,
             email,
             phone_number: phone,
             password,

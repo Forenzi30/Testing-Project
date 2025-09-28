@@ -51,16 +51,16 @@ app.get('/api/room-availability', async (req, res) => {
 // ==================== REGISTER ====================
 // Endpoint register pelanggan
 app.post('/api/register', async (req, res) => {
-    const { username, password, email, phone_number } = req.body;
+    const { username, name, password, email, phone_number } = req.body;
     console.log('Register attempt:', req.body); // Debug: log data masuk
-    if (!username || !password || !email || !phone_number) {
+    if (!username || !name || !password || !email || !phone_number) {
         return res.status(400).json({ success: false, message: 'Missing fields' });
     }
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         const [result] = await pool.execute(
-            'INSERT INTO pelanggan (username, email, phone_number, password, created_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)',
-            [username, email, phone_number, hashedPassword]
+            'INSERT INTO pelanggan (username, name, email, phone_number, password, created_at) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)',
+            [username, name, email, phone_number, hashedPassword]
         );
         console.log('Insert result:', result); // Debug: log SQL result
         res.json({ success: true, message: 'Pelanggan registered' });
@@ -230,6 +230,23 @@ app.post('/api/create-invoice', async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: err.message, error: err });
     }
+});
+
+// Xendit Webhook endpoint
+const XENDIT_WEBHOOK_TOKEN = process.env.XENDIT_WEBHOOK_TOKEN;
+
+app.post('/api/xendit-webhook', express.json(), (req, res) => {
+    const callbackToken = req.headers['x-callback-token'];
+    if (callbackToken !== XENDIT_WEBHOOK_TOKEN) {
+        console.warn('Invalid Xendit webhook token:', callbackToken);
+        return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    // Log the webhook event (you can update order/payment status here)
+    console.log('Xendit webhook received:', req.body);
+
+    // Respond with 200 OK to acknowledge receipt
+    res.status(200).json({ message: 'Webhook received' });
 });
 
 // Jalankan server
