@@ -69,11 +69,15 @@ document.querySelectorAll('input[name="room"]').forEach(function(radio) {
     });
 });
 
-// Disable order button by default until room checked
-document.querySelector('.order-btn').disabled = true;
+// Initialize order button state
+document.addEventListener('DOMContentLoaded', function() {
+    const orderBtn = document.querySelector('.order-btn');
+    if (orderBtn) {
+        orderBtn.disabled = !isLoggedIn();
+        updateOrderButtonState();
+    }
+});
 
-// Optionally, update button state on page load
-updateOrderButtonState();
 
 // Handle order button click
 document.querySelector('.order-btn').addEventListener('click', function(event) {
