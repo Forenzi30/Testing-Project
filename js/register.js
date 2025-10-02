@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         // Use backend URL from env.js if available, fallback to localhost
-        const backendUrl = window.env && window.env.BACKEND_URL ? window.env.BACKEND_URL : 'http://localhost:3000';
+        const backendUrl = window.env && window.env.BACKEND_URL ? window.env.BACKEND_URL : 'http://localhost:3030';
 
         // Send the data to the backend via POST request using fetch
         fetch(backendUrl + '/api/register', {

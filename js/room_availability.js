@@ -15,6 +15,25 @@ function mapRoomType(value) {
     }
 }
 
+// Room prices mapping
+const roomPrices = {
+    'Standard_Room': 500000,
+    'Deluxe_Room': 750000,
+    'Executive_Suit': 1000000
+};
+
+// Update price display
+function updatePriceDisplay(roomType) {
+    const priceInfo = document.getElementById('price-info');
+    const totalPrice = document.getElementById('total-price');
+    
+    if (priceInfo && totalPrice) {
+        const price = roomPrices[roomType] || 0;
+        totalPrice.textContent = `Rp ${price.toLocaleString('id-ID')}`;
+        priceInfo.style.display = price > 0 ? 'block' : 'none';
+    }
+}
+
 function updateOrderButtonState() {
     const orderBtn = document.querySelector('.order-btn');
     // Only enable if logged in and room is available
@@ -39,6 +58,7 @@ document.querySelectorAll('input[name="room"]').forEach(function(radio) {
                     statusDiv.style.color = 'red';
                 }
                 updateOrderButtonState();
+                updatePriceDisplay(roomType);
             })
             .catch(() => {
                 statusDiv.textContent = 'Error checking availability';
@@ -101,7 +121,20 @@ document.querySelector('.order-btn').addEventListener('click', function(event) {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            alert('Order successful!');
+            // Order successful, now initiate payment
+            alert('Order created successfully! Redirecting to payment...');
+            
+            // Add mobile_number and order ID to orderData for payment
+            orderData.mobile_number = formData.get('mobile_number');
+            orderData.midtrans_order_id = data.order_id; // Get order ID from response
+            
+            // Call Midtrans payment function
+            if (typeof createMidtransPayment === 'function') {
+                createMidtransPayment(orderData);
+            } else {
+                alert('Payment system not available. Please contact support.');
+            }
+            
             // Refresh availability after order
             selectedRoom.dispatchEvent(new Event('change'));
         } else {

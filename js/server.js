@@ -6,10 +6,10 @@ const bodyParser = require('body-parser');
 const pool = require('./db');
 const bcrypt = require('bcrypt');
 const path = require('path');
-const Xendit = require('xendit-node');
+const midtransClient = require('midtrans-client');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3030;
 
 // Middleware
 app.use(cors());
@@ -135,25 +135,56 @@ app.post('/api/order-room', async (req, res) => {
             [room_id]
         );
 
-        // Insert order into orders table (assume column 'name' instead of first_name/last_name)
+        // Generate order ID for Midtrans
+        const orderId = `ORDER-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        
+        // Insert order into orders table with Midtrans order ID
         const [orderResult] = await pool.execute(
             `INSERT INTO orders
-                (pelanggan_id, room_id, name, email, check_in, check_out, adults, childrens, created_at)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
+                (pelanggan_id, room_id, name, email, check_in, check_out, adults, childrens, midtrans_order_id, payment_status, created_at)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())`,
             [
                 pelanggan_id, room_id, name, email,
-                check_in, check_out, adults, childrens || 0
+                check_in, check_out, adults, childrens || 0, orderId
             ]
         );
 
         if (orderResult.affectedRows === 1) {
-            res.json({ success: true, message: 'Room ordered successfully!' });
+            res.json({ 
+                success: true, 
+                message: 'Room ordered successfully!',
+                order_id: orderId
+            });
         } else {
             console.error('Order insert failed:', orderResult);
             res.status(500).json({ success: false, message: 'Failed to insert order.' });
         }
     } catch (err) {
         console.error('Order error:', err);
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+// ==================== ORDER HISTORY ================================
+// Get user's order history
+app.get('/api/order-history', async (req, res) => {
+    const username = req.query.username;
+    if (!username) {
+        return res.status(400).json({ success: false, message: 'No username provided' });
+    }
+    try {
+        const [rows] = await pool.execute(
+            `SELECT o.*, r.tipe as room_type, r.harga as room_price, p.name as customer_name
+             FROM orders o 
+             JOIN rooms r ON o.room_id = r.id 
+             JOIN pelanggan p ON o.pelanggan_id = p.id 
+             WHERE p.username = ? 
+             ORDER BY o.created_at DESC`,
+            [username]
+        );
+        res.json({ success: true, orders: rows });
+    } catch (err) {
+        console.error('Order history error:', err);
         res.status(500).json({ success: false, message: err.message });
     }
 });
@@ -203,50 +234,126 @@ app.post('/api/profile', async (req, res) => {
     }
 });
 
-// ==================== XENDIT PAYMENT ====================
-let x, Invoice, invoiceClient;
-try {
-    x = new Xendit({ secretKey: process.env.PAYMENT_API_KEY });
-    ({ Invoice } = x);
-    invoiceClient = new Invoice({});
-} catch (err) {
-    console.error('Xendit initialization error:', err);
-}
+// ==================== MIDTRANS PAYMENT ====================
+// Initialize Midtrans client
+const snap = new midtransClient.Snap({
+    isProduction: process.env.MIDTRANS_IS_PRODUCTION === 'true',
+    serverKey: process.env.MIDTRANS_SERVER_KEY,
+    clientKey: process.env.MIDTRANS_CLIENT_KEY
+});
 
-app.post('/api/create-invoice', async (req, res) => {
+
+// ==================== MIDTRANS PAYMENT ENDPOINTS ====================
+// Create Midtrans payment token
+app.post('/api/midtrans/create-token', async (req, res) => {
     try {
-        // Get order data from request body
-        const { externalID, payerEmail, description, amount } = req.body;
-        if (!externalID || !payerEmail || !description || !amount) {
-            return res.status(400).json({ message: 'Missing required fields' });
+        const { order_id, gross_amount, customer_details, item_details } = req.body;
+        
+        if (!order_id || !gross_amount || !customer_details || !item_details) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Missing required fields: order_id, gross_amount, customer_details, item_details' 
+            });
         }
-        const invoice = await invoiceClient.createInvoice({
-            externalID,
-            payerEmail,
-            description,
-            amount,
+
+        const parameter = {
+            transaction_details: {
+                order_id: order_id,
+                gross_amount: gross_amount
+            },
+            customer_details: customer_details,
+            item_details: item_details,
+            credit_card: {
+                secure: true
+            }
+        };
+
+        const transaction = await snap.createTransaction(parameter);
+        res.json({
+            success: true,
+            token: transaction.token,
+            redirect_url: transaction.redirect_url
         });
-        res.json(invoice); // invoice.invoice_url gives payment link
-    } catch (err) {
-        res.status(500).json({ message: err.message, error: err });
+    } catch (error) {
+        console.error('Midtrans create token error:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Failed to create payment token',
+            error: error.message 
+        });
     }
 });
 
-// Xendit Webhook endpoint
-const XENDIT_WEBHOOK_TOKEN = process.env.XENDIT_WEBHOOK_TOKEN;
-
-app.post('/api/xendit-webhook', express.json(), (req, res) => {
-    const callbackToken = req.headers['x-callback-token'];
-    if (callbackToken !== XENDIT_WEBHOOK_TOKEN) {
-        console.warn('Invalid Xendit webhook token:', callbackToken);
-        return res.status(403).json({ message: 'Forbidden' });
+// Get Midtrans payment status
+app.get('/api/midtrans/status/:orderId', async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        const transaction = await snap.transaction.status(orderId);
+        res.json({
+            success: true,
+            transaction: transaction
+        });
+    } catch (error) {
+        console.error('Midtrans status check error:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Failed to check payment status',
+            error: error.message 
+        });
     }
+});
 
-    // Log the webhook event (you can update order/payment status here)
-    console.log('Xendit webhook received:', req.body);
-
-    // Respond with 200 OK to acknowledge receipt
-    res.status(200).json({ message: 'Webhook received' });
+// Midtrans notification handler (webhook)
+app.post('/api/midtrans/notification', express.json(), async (req, res) => {
+    try {
+        const notification = req.body;
+        console.log('Midtrans notification received:', notification);
+        
+        // Verify the notification signature if needed
+        // You can add signature verification here for security
+        
+        // Update order status based on notification
+        const { order_id, transaction_status, fraud_status, gross_amount, payment_type } = notification;
+        
+        let paymentStatus = 'pending';
+        
+        if (transaction_status === 'capture') {
+            if (fraud_status === 'challenge') {
+                console.log('Payment challenged:', order_id);
+                paymentStatus = 'challenged';
+            } else if (fraud_status === 'accept') {
+                console.log('Payment accepted:', order_id);
+                paymentStatus = 'paid';
+            }
+        } else if (transaction_status === 'settlement') {
+            console.log('Payment settled:', order_id);
+            paymentStatus = 'completed';
+        } else if (transaction_status === 'cancel' || 
+                   transaction_status === 'deny' || 
+                   transaction_status === 'expire') {
+            console.log('Payment failed:', order_id, transaction_status);
+            paymentStatus = 'failed';
+        } else if (transaction_status === 'pending') {
+            console.log('Payment pending:', order_id);
+            paymentStatus = 'pending';
+        }
+        
+        // Update order status in database
+        try {
+            await pool.execute(
+                'UPDATE orders SET payment_status = ?, payment_type = ?, gross_amount = ? WHERE midtrans_order_id = ?',
+                [paymentStatus, payment_type || 'unknown', gross_amount || 0, order_id]
+            );
+            console.log(`Order ${order_id} status updated to: ${paymentStatus}`);
+        } catch (dbError) {
+            console.error('Database update error:', dbError);
+        }
+        
+        res.status(200).json({ message: 'Notification received' });
+    } catch (error) {
+        console.error('Midtrans notification error:', error);
+        res.status(500).json({ message: 'Notification processing failed' });
+    }
 });
 
 // Jalankan server

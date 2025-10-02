@@ -116,11 +116,29 @@
                         <!-- Tambahkan elemen berikut untuk status ketersediaan -->
                         <div id="room-availability-status" style="margin-top:10px; font-weight:bold;"></div>
                     </div>
+                    <div class="order-box">
+                        <p>PAYMENT METHOD</p>
+                        <div class="payment-methods">
+                            <div class="payment-option">
+                                <input type="radio" id="midtrans-payment" name="payment_method" value="midtrans" checked>
+                                <label for="midtrans-payment">
+                                    <i class="fas fa-credit-card"></i>
+                                    Midtrans Payment Gateway
+                                </label>
+                            </div>
+                            <div class="payment-info">
+                                <small>Secure payment with multiple options: Credit Card, Bank Transfer, E-wallet, and more</small>
+                            </div>
+                        </div>
+                    </div>
                     <div class="order-box order-action">
-                        <button class="order-btn">ORDER</button>
+                        <button class="order-btn">ORDER & PAY</button>
                         <p class="order-desc">
                             Order Your Seaside Escape: Where Waves Meet Wonders! Reserve Your Slice of Paradise at LuxeLeaf Glampsite – Your Passport to Coastal Bliss.
                         </p>
+                        <div class="price-info" id="price-info" style="display: none;">
+                            <h4>Estimated Total: <span id="total-price">Rp 0</span></h4>
+                        </div>
                     </div>
                 </div>
             </form>

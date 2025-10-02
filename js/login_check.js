@@ -17,6 +17,18 @@ function updateNav() {
         } else {
             orderLink.style.display = '';
         }
+        
+        // Show History link if not present
+        let historyLink = document.querySelector('a[href="history.html"]');
+        if (!historyLink) {
+            historyLink = document.createElement('a');
+            historyLink.href = 'history.html';
+            historyLink.textContent = 'History';
+            historyLink.className = 'nav-btn history-link';
+            orderLink.parentNode.insertBefore(historyLink, loginBtn);
+        } else {
+            historyLink.style.display = '';
+        }
 
         // Show Logout button
         loginBtn.textContent = 'Logout';
@@ -38,25 +50,16 @@ function updateNav() {
         if (orderLink) {
             orderLink.style.display = 'none';
         }
+        // Hide History link if present
+        const historyLink = document.querySelector('a[href="history.html"]');
+        if (historyLink) {
+            historyLink.style.display = 'none';
+        }
         // Show Login button
         loginBtn.textContent = 'Login';
         loginBtn.href = 'login.html';
         loginBtn.onclick = null;
     }
 }
-
-updateNav();
-        if (profileLink) {
-            profileLink.style.display = 'none';
-        }
-        // Hide Order link if present
-        if (orderLink) {
-            orderLink.style.display = 'none';
-        }
-        loginBtn.textContent = 'Login';
-        loginBtn.href = 'login.html';
-        loginBtn.onclick = null;
-
-
 
 updateNav();

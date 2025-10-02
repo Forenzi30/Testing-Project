@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         try {
             // Get backend URL from .env via window.env (use env.js loader)
-            const backendUrl = window.env && window.env.BACKEND_URL ? window.env.BACKEND_URL : 'http://localhost:3000';
+            const backendUrl = window.env && window.env.BACKEND_URL ? window.env.BACKEND_URL : 'http://localhost:3030';
             // Kirim data ke server
             const response = await fetch(backendUrl + '/login', {
                 method: 'POST',
