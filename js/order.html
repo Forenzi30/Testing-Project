@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="css/order.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" type="text/css" rel="stylesheet">
+    <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order</title>
+</head>
+<body>
+    <button class="menu-btn" id="menuBtn">☰</button>
+    <nav class="navbar" id="navbar">
+        <div class="navbar-content">
+            <a href="index.html" class="logo-link">
+                <img height="60" src="./images/Logo1.png" width="60" alt="" class="logo">
+            </a>
+            <ul class="nav-links">
+                <li><a href="room page.html">Rooms</a></li>
+                <li><a href="food&drink.html">Food & Drink</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="Event.html">Events</a></li>
+                <li><a href="contactUs.html">Contact</a></li>
+            </ul>
+            <div class="nav-buttons">
+                <a href="order.html" class="nav-btn">Order</a>
+                <a href="login.html" class="nav-btn">Login</a>
+            </div>
+        </div>
+    </nav>
+    <section class="container">
+        <!-- Konten -->
+        <div class="content">
+            <header>
+                <h1>ORDER</h1>
+            </header>
+            
+            <!-- Main content -->
+            <form class="main-content" id="order-form">
+                <div class="left-panel">
+                    <div class="img">
+                        <img src="./images/li-yang-hpncxymfyzw-unsplash-befb0c768d156354a16684eef4df3b02_600x400.jpg" alt="" id="chosenRoom">    
+                    </div>
+                    <div class="desc">
+                        <p>Welcome to the LuxeLeaf Glampsite Order page! Enjoy the convenience of booking an unforgettable beachfront stay with us. Please complete the order form below to plan your vacation or special occasion in this natural paradise. Experience the beauty of glamping, the delights of dining, and the warmth of white sand by filling out your order form today. We are ready to welcome you for a magical experience at LuxeLeaf Glampsite!</p>
+                    </div>
+                </div>
+                <div class="right-panel">
+                    <div class="order-box">
+                        <label class="label-check">CHECK AVAILABILITY</label>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <p>NAME</p>
+                                <input type="text" id="name" name="name" class="check-in-box" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-box">
+                        <div class="input-row">
+                            <div class="input-group">
+                                <p>CHECK IN</p>
+                                <input type="date" name="check_in" class="check-in-box" required>
+                            </div>
+                            <div class="input-group">
+                                <p>CHECK OUT</p>
+                                <input type="date" name="check_out" class="check-out-box" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-box">
+                        <div class="input-row">
+                            <div class="input-group">
+                                <p>ADULTS</p>
+                                <select name="adults" class="adults-box" required>
+                                    <option value="0">NONE</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <p>CHILDRENS</p>
+                                <select name="childrens" class="adults-box">
+                                    <option value="0">NONE</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-box">
+                        <div class="input-row">
+                            <div class="input-group">
+                                <p>EMAIL</p>
+                                <input type="email" name="email" class="check-in-box" required>
+                            </div>
+                            <div class="input-group">
+                                <p>MOBILE NUMBER</p>
+                                <input type="text" name="mobile_number" class="check-in-box" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-box">
+                        <p>ROOM</p>
+                        <input type="radio" class="room-btn" name="room" value="Standard" required>
+                        <label>Standard Room</label>
+                        <br>
+                        <input type="radio" class="room-btn" name="room" value="Deluxe">
+                        <label>Deluxe Room</label>
+                        <br>
+                        <input type="radio" class="room-btn" name="room" value="Executive">
+                        <label>Executive Suite</label>
+                        <!-- Tambahkan elemen berikut untuk status ketersediaan -->
+                        <div id="room-availability-status" style="margin-top:10px; font-weight:bold;"></div>
+                    </div>
+                    <div class="order-box">
+                        <p>PAYMENT METHOD</p>
+                        <div class="payment-methods">
+                            <div class="payment-option">
+                                <input type="radio" id="midtrans-payment" name="payment_method" value="midtrans" checked>
+                                <label for="midtrans-payment">
+                                    <i class="fas fa-credit-card"></i>
+                                    Midtrans Payment Gateway
+                                </label>
+                            </div>
+                            <div class="payment-info">
+                                <small>Secure payment with multiple options: Credit Card, Bank Transfer, E-wallet, and more</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-box order-action">
+                        <button class="order-btn">ORDER & PAY</button>
+                        <p class="order-desc">
+                            Order Your Seaside Escape: Where Waves Meet Wonders! Reserve Your Slice of Paradise at LuxeLeaf Glampsite – Your Passport to Coastal Bliss.
+                        </p>
+                        <div class="price-info" id="price-info" style="display: none;">
+                            <h4>Estimated Total: <span id="total-price">Rp 0</span></h4>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!-- Footer -->
+            <footer>
+                <div class="footer-column">
+                    <h4>LuxeLeaf Glampsite</h4>
+                    <div class="copyright">
+                        <p>Copyright © 2023 Group 14 RevoU</p>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Media Social</h4>
+                    <div class="media-social">
+                        <a href="https://www.instagram.com/" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="https://www.gmail.com/" target="_blank"><i class="fa fa-envelope"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Alamat</h4>
+                    <div class="alamat">
+                        <p>Jln. Doang Jadian Kaga, Bandung</p>
+                        <p>8830-8231-1543</p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </section>
+    <script src="js/login_check.js"></script>
+    <script src="js/menubtn.js"></script>
+    <script src="js/room_availability.js"></script>
+    <script src="js/order_payment.js"></script>
+</body>
+</html>

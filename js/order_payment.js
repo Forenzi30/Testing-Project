@@ -12,8 +12,14 @@ function loadMidtransSDK() {
         const script = document.createElement('script');
         script.src = 'https://app.sandbox.midtrans.com/snap/snap.js';
         script.setAttribute('data-client-key', MIDTRANS_CLIENT_KEY);
-        script.onload = () => resolve(window.snap);
-        script.onerror = () => reject(new Error('Failed to load Midtrans SDK'));
+        script.onload = () => {
+            console.log('Midtrans Snap SDK loaded successfully');
+            resolve(window.snap);
+        };
+        script.onerror = (error) => {
+            console.error('Failed to load Midtrans SDK:', error);
+            reject(new Error('Failed to load Midtrans SDK'));
+        };
         document.head.appendChild(script);
     });
 }

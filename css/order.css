@@ -1,7 +1,4 @@
-@font-face {
-  font-family: Broken\ Knight\ DEMO;
-  src: url(./Fonts/Broken\ Knight\ DEMO.ttf);
-}
+/* Font removed - using system fonts instead */
 
 
 
@@ -222,19 +219,33 @@ header h1 {
 
 .order-btn {
   display: block;
-  border-radius: 0%;
-  border-width: 0;
+  border-radius: 8px;
+  border: none;
   width: 100%;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding: 15px 20px;
   background-color: #488BB1;
-  color:#ddd;
-  
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.order-btn:hover {
+.order-btn:hover:not(:disabled) {
   background-color:#ffffff;
   color:#488BB1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(72, 139, 177, 0.3);
+}
+
+.order-btn:disabled {
+  background-color: #bdc3c7;
+  color: #7f8c8d;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .label-check {
@@ -307,7 +318,27 @@ header h1 {
 }
 
 .room-btn {
-  border-radius: 0%;
+  margin-right: 8px;
+  margin-bottom: 10px;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.room-btn + label {
+  cursor: pointer;
+  font-weight: 500;
+  color: #333;
+  margin-right: 20px;
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.room-btn:checked + label {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  font-weight: bold;
 }
 
 .address {
