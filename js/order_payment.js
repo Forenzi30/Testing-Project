@@ -29,9 +29,9 @@ async function createMidtransPayment(orderData) {
     try {
         // Calculate total amount (you can customize this based on room type and duration)
         const roomPrices = {
-            'Standard_Room': 500000,
-            'Deluxe_Room': 750000,
-            'Executive_Suit': 1000000
+            'Standard Room': 500000,
+            'Deluxe Room': 750000,
+            'Executive Suite': 1000000
         };
         
         const grossAmount = roomPrices[orderData.roomType] || 500000;
@@ -73,6 +73,8 @@ async function createMidtransPayment(orderData) {
             snap.pay(result.token, {
                 onSuccess: function(result) {
                     console.log('Payment success:', result);
+                    // Update payment status in database
+                    updatePaymentStatusInDB(orderData.midtrans_order_id, 'completed');
                     // Update UI to show success
                     updatePaymentStatus('success', result);
                     // Redirect to history page after 2 seconds
@@ -82,6 +84,8 @@ async function createMidtransPayment(orderData) {
                 },
                 onPending: function(result) {
                     console.log('Payment pending:', result);
+                    // Update payment status in database
+                    updatePaymentStatusInDB(orderData.midtrans_order_id, 'pending');
                     // Update UI to show pending
                     updatePaymentStatus('pending', result);
                     // Redirect to history page to check status
@@ -91,6 +95,8 @@ async function createMidtransPayment(orderData) {
                 },
                 onError: function(result) {
                     console.log('Payment error:', result);
+                    // Update payment status in database
+                    updatePaymentStatusInDB(orderData.midtrans_order_id, 'failed');
                     // Update UI to show error
                     updatePaymentStatus('error', result);
                     // Stay on current page for retry
@@ -216,6 +222,31 @@ function redirectToPayment(orderId) {
     // This function is now replaced by createMidtransPayment
     console.log('Legacy payment redirect called for order:', orderId);
     alert('Please use the new Midtrans payment system.');
+}
+
+// Update payment status in database
+async function updatePaymentStatusInDB(orderId, status) {
+    try {
+        const response = await fetch('/api/update-payment-status', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                order_id: orderId,
+                status: status
+            })
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            console.log('Payment status updated in database:', status);
+        } else {
+            console.error('Failed to update payment status:', result.message);
+        }
+    } catch (error) {
+        console.error('Error updating payment status:', error);
+    }
 }
 
 // Example usage: call createMidtransPayment(orderData) after order is successful

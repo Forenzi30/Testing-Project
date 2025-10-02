@@ -189,3 +189,4 @@ function formatPaymentType(paymentType) {
     
     return typeMap[paymentType] || paymentType.replace(/_/g, ' ').toUpperCase();
 }
+

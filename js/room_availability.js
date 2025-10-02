@@ -8,18 +8,18 @@ let currentStock = 0;
 // Map radio value to DB tipe value
 function mapRoomType(value) {
     switch (value) {
-        case 'Standard': return 'Standard_Room';
-        case 'Deluxe': return 'Deluxe_Room';
-        case 'Executive': return 'Executive_Suite';
+        case 'Standard': return 'Standard Room';
+        case 'Deluxe': return 'Deluxe Room';
+        case 'Executive': return 'Executive Suite';
         default: return value;
     }
 }
 
 // Room prices mapping
 const roomPrices = {
-    'Standard_Room': 500000,
-    'Deluxe_Room': 750000,
-    'Executive_Suit': 1000000
+    'Standard Room': 500000,
+    'Deluxe Room': 750000,
+    'Executive Suite': 1000000
 };
 
 // Update price display
