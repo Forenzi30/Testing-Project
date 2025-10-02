@@ -10,7 +10,7 @@ function mapRoomType(value) {
     switch (value) {
         case 'Standard': return 'Standard_Room';
         case 'Deluxe': return 'Deluxe_Room';
-        case 'Executive': return 'Executive_Suit';
+        case 'Executive': return 'Executive_Suite';
         default: return value;
     }
 }
