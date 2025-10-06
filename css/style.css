@@ -125,6 +125,10 @@ header {
     text-align: center;
 }
 
+.deskripsi {
+    text-align: justify;
+}
+
 /* Main Images Section */
 .main-images {
     display: grid;

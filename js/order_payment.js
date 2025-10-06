@@ -29,9 +29,9 @@ async function createMidtransPayment(orderData) {
     try {
         // Calculate total amount (you can customize this based on room type and duration)
         const roomPrices = {
-            'Standard Room': 500000,
-            'Deluxe Room': 750000,
-            'Executive Suite': 1000000
+            'Standard Room': 120000,
+            'Deluxe Room': 145000,
+            'Executive Suite': 170000
         };
         
         const grossAmount = roomPrices[orderData.roomType] || 500000;

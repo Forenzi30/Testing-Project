@@ -17,9 +17,9 @@ function mapRoomType(value) {
 
 // Room prices mapping
 const roomPrices = {
-    'Standard Room': 500000,
-    'Deluxe Room': 750000,
-    'Executive Suite': 1000000
+    'Standard Room': 120000,
+    'Deluxe Room': 145000,
+    'Executive Suite': 170000
 };
 
 // Update price display

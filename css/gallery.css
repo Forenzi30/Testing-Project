@@ -601,3 +601,19 @@ footer {
 .Event .gallery {
     margin-bottom: 40px; /* Add space between event pictures and footer */
 }
+
+/* Make all room images in the gallery the same height for better bottom alignment */
+.Room .gallery-image img {
+  height: 320px;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Make all EatandDrink images in the gallery the same height for better bottom alignment */
+.EatandDrink .gallery-image img {
+  height: 320px;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+}
