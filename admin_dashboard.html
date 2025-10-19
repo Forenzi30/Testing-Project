@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Hotel 999</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" type="text/css" rel="stylesheet">
+    <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon"/>
+    <style>
+        .dashboard-section { background: #fff; border-radius: 10px; margin: 30px 0; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.07);}
+        .dashboard-section h2 { margin-bottom: 15px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px;}
+        th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left;}
+        th { background: #f5f5f5; }
+        .status-completed { color: #27ae60; font-weight: bold; }
+        .status-pending { color: #f39c12; font-weight: bold; }
+        .status-failed { color: #e74c3c; font-weight: bold; }
+    </style>
+</head>
+<body>
+<button class="menu-btn" id="menuBtn">☰</button>
+<nav class="navbar" id="navbar">
+    <div class="navbar-content">
+        <a href="index.html" class="logo-link">
+            <img height="60" src="./images/Logo1.png" width="60" alt="" class="logo">
+        </a>
+        <ul class="nav-links">
+            <li><a href="room page.html">Rooms</a></li>
+            <li><a href="food&drink.html">Food & Drink</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="contactUs.html">Contact</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <a href="admin_dashboard.html" class="nav-btn">Admin</a>
+            <a href="login.html" class="nav-btn">Login</a>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="content">
+        <header>
+            <h1>Admin Dashboard</h1>
+            <h3>Manage Orders & Room Stock</h3>
+        </header>
+        <section class="dashboard-section">
+            <h2>All Orders</h2>
+            <div id="orders-loading">Loading orders...</div>
+            <table id="orders-table" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>User</th>
+                        <th>Room Type</th>
+                        <th>Check In</th>
+                        <th>Check Out</th>
+                        <th>Guests</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                        <th>Created At</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-tbody">
+                    <!-- Orders will be loaded here -->
+                </tbody>
+            </table>
+        </section>
+        <section class="dashboard-section">
+            <h2>Room Stock & Bookings</h2>
+            <div id="rooms-loading">Loading room data...</div>
+            <table id="rooms-table" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>Room Type</th>
+                        <th>Stock Left</th>
+                        <th>Total Booked</th>
+                    </tr>
+                </thead>
+                <tbody id="rooms-tbody">
+                    <!-- Room stock will be loaded here -->
+                </tbody>
+            </table>
+        </section>
+    </div>
+</div>
+<footer>
+    <div class="footer-column">
+        <h4>Hotel 999</h4>
+        <div class="copyright">
+            <p>© 2024</p>
+        </div>
+    </div>
+</footer>
+<script src="js/login_check.js"></script>
+<script src="js/menubtn.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Only allow access if admin
+    if (localStorage.getItem('isAdmin') !== 'true') {
+        alert('You are not authorized to access this page.');
+        window.location.href = 'index.html';
+        return;
+    }
+    // Load all orders
+    fetch('/api/admin/all-orders', {
+        headers: { 'x-admin': 'true' }
+    })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('orders-loading').style.display = 'none';
+            if (data.success && data.orders.length > 0) {
+                const tbody = document.getElementById('orders-tbody');
+                data.orders.forEach(order => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${order.midtrans_order_id || order.id}</td>
+                        <td>${order.username}</td>
+                        <td>${order.room_type}</td>
+                        <td>${order.check_in ? order.check_in.substring(0,10) : ''}</td>
+                        <td>${order.check_out ? order.check_out.substring(0,10) : ''}</td>
+                        <td>${order.adults}A${order.childrens > 0 ? ', ' + order.childrens + 'C' : ''}</td>
+                        <td class="status-${order.payment_status || 'pending'}">${order.payment_status || 'pending'}</td>
+                        <td>${order.payment_type || '-'}</td>
+                        <td>${order.created_at ? order.created_at.substring(0,19).replace('T',' ') : ''}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                document.getElementById('orders-table').style.display = '';
+            } else {
+                document.getElementById('orders-tbody').innerHTML = '<tr><td colspan="9">No orders found.</td></tr>';
+                document.getElementById('orders-table').style.display = '';
+            }
+        });
+
+    // Load room stock and booking count
+    fetch('/api/admin/room-stock', {
+        headers: { 'x-admin': 'true' }
+    })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('rooms-loading').style.display = 'none';
+            if (data.success && data.rooms.length > 0) {
+                const tbody = document.getElementById('rooms-tbody');
+                data.rooms.forEach(room => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${room.roomType}</td>
+                        <td>${room.stock}</td>
+                        <td>${room.booked_count}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                document.getElementById('rooms-table').style.display = '';
+            } else {
+                document.getElementById('rooms-tbody').innerHTML = '<tr><td colspan="3">No room data found.</td></tr>';
+                document.getElementById('rooms-table').style.display = '';
+            }
+        });
+});
+</script>
+</body>
+</html>

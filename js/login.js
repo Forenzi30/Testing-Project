@@ -24,12 +24,18 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             const data = await response.json();
+            console.log('Login response:', data);
 
             if (data.success) {
                 // Simpan status login di localStorage
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('username', username);
-
+                // Store admin flag
+                if (data.is_admin) {
+                    localStorage.setItem('isAdmin', 'true');
+                } else {
+                    localStorage.removeItem('isAdmin');
+                }
                 alert(data.message);
                 window.location.href = 'index.html'; // Pindah ke halaman utama
             } else {

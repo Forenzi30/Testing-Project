@@ -155,7 +155,13 @@ header {
 }
 
 .room img {
+<<<<<<< Updated upstream
     width: 40%;
+=======
+    display: block;
+    margin: auto;
+    width: 50%;
+>>>>>>> Stashed changes
     height: auto;
     border-radius: 8px;
     margin: auto;

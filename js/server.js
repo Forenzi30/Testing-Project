@@ -83,11 +83,15 @@ app.post('/login', async (req, res) => {
             return res.json({ success: false, message: 'Username tidak ditemukan' });
         }
         const user = rows[0];
+        // Debug log
+        console.log('User object:', user);
+        console.log('user.is_admin:', user.is_admin);
         const match = await bcrypt.compare(password, user.password);
         if (!match) {
             return res.json({ success: false, message: 'Password salah' });
         }
-        res.json({ success: true, message: 'Login berhasil' });
+        // Use == to allow string or number
+        res.json({ success: true, message: 'Login berhasil', is_admin: user.is_admin == 1 });
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: 'Gagal login' });
@@ -487,6 +491,46 @@ app.post('/api/midtrans/notification', express.json(), async (req, res) => {
     } catch (error) {
         console.error('Midtrans notification error:', error);
         res.status(500).json({ message: 'Notification processing failed' });
+    }
+});
+
+// ==================== ADMIN DASHBOARD ENDPOINTS ====================
+// Middleware to check admin header
+function requireAdmin(req, res, next) {
+    // In production, use sessions/JWT. For now, check header.
+    if (req.headers['x-admin'] === 'true') {
+        return next();
+    }
+    return res.status(403).json({ success: false, message: 'Forbidden: Admins only' });
+}
+
+// Get all orders with user and room info
+app.get('/api/admin/all-orders', requireAdmin, async (req, res) => {
+    try {
+        const [rows] = await pool.execute(
+            `SELECT o.*, r.roomType as room_type, p.username
+             FROM orders o
+             JOIN rooms r ON o.room_id = r.id
+             JOIN pelanggan p ON o.pelanggan_id = p.id
+             ORDER BY o.created_at DESC`
+        );
+        res.json({ success: true, orders: rows });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+// Get room stock and how many times each room type has been booked
+app.get('/api/admin/room-stock', requireAdmin, async (req, res) => {
+    try {
+        const [rooms] = await pool.execute(
+            `SELECT r.roomType, r.stock, 
+                (SELECT COUNT(*) FROM orders o WHERE o.room_id = r.id) as booked_count
+             FROM rooms r`
+        );
+        res.json({ success: true, rooms });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
     }
 });
 

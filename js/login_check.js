@@ -60,6 +60,23 @@ function updateNav() {
         loginBtn.href = 'login.html';
         loginBtn.onclick = null;
     }
+
+    // Show Admin Dashboard link only for admin
+    let adminLink = document.querySelector('a[href="admin_dashboard.html"]');
+    if (localStorage.getItem('isAdmin') === 'true') {
+        if (!adminLink) {
+            adminLink = document.createElement('a');
+            adminLink.href = 'admin_dashboard.html';
+            adminLink.textContent = 'Admin Dashboard';
+            adminLink.className = 'nav-btn admin-link';
+            // Insert before login/logout button
+            loginBtn.parentNode.insertBefore(adminLink, loginBtn);
+        } else {
+            adminLink.style.display = '';
+        }
+    } else if (adminLink) {
+        adminLink.style.display = 'none';
+    }
 }
 
 updateNav();
