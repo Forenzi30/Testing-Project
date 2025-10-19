@@ -155,23 +155,9 @@ header {
 }
 
 .room img {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    width: 40%;
-=======
     display: block;
     margin: auto;
     width: 50%;
->>>>>>> Stashed changes
-=======
-    display: block;
-    margin: auto;
-    width: 50%;
->>>>>>> Stashed changes
-    height: auto;
-    border-radius: 8px;
-    margin: auto;
-    display: block;
 }
 
 /* Footer Styles */
