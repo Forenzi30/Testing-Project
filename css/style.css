@@ -1,3 +1,336 @@
+/* ===== Modern design tokens, typography, layout & animations ===== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@600;700&display=swap');
+
+:root{
+  --bg:#ffffff;
+  --surface: #ffffff;
+  --muted: #6b7280;
+  --nav-bg: rgba(15,23,30,0.95);
+  --accent: #0ea5a4;       /* primary accent */
+  --accent-2: #036d6b;     /* darker accent */
+  --card-radius: 12px;
+  --container-max: 1200px;
+  --easing: cubic-bezier(.2,.9,.2,1);
+  --glass: rgba(255,255,255,0.6);
+}
+
+/* ===== UI enhancements: palette, typography, micro-interactions, reveal/stagger ===== */
+
+/* ...existing code... */
+
+:root{
+  /* palette */
+  --bg-100: #f6f8fa;
+  --surface: #ffffff;
+  --muted: #6b7280;
+  --text: #0f1720;
+  --accent: #0ea5a4;
+  --accent-2: #036d6b;
+  --card-border: rgba(15,25,30,0.06);
+  --focus: rgba(14,165,164,0.18);
+  --radius: 12px;
+  --dur: 420ms;
+  --easing: cubic-bezier(.2,.9,.2,1);
+}
+
+/* Typography scale (adjust headings for a slightly luxurious feel) */
+:root {
+  --fs-h1: clamp(1.6rem, 4.4vw, 2.8rem);
+  --fs-h2: clamp(1.25rem, 3.2vw, 1.9rem);
+  --fs-body: 1rem;
+}
+h1 { font-size: var(--fs-h1); letter-spacing: -0.02em; color:var(--text); }
+h2 { font-size: var(--fs-h2); color:var(--text); }
+
+/* Page background and content panel for clarity */
+html, body { background: var(--bg-100); color: var(--text); }
+.content { background: var(--surface); border-radius: var(--radius); padding: 28px; box-shadow: 0 12px 40px rgba(12,18,24,0.06); }
+
+/* Buttons / links: consistent micro-interaction */
+.btn-soft, .nav-btn, .cta, .order-btn {
+  transition: transform 220ms var(--easing), box-shadow 220ms var(--easing), background 220ms var(--easing);
+  will-change: transform;
+}
+.btn-soft:hover, .nav-btn:hover, .cta:hover, .order-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgba(10,20,25,0.08);
+}
+
+/* Focus ring for accessibility */
+a:focus, button:focus, input:focus {
+  outline: none;
+  box-shadow: 0 0 0 6px var(--focus);
+  border-radius: 8px;
+}
+
+/* Card lift + subtle border */
+.room-card {
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,250,250,0.98));
+}
+
+/* Image hover micro-interaction */
+.gallery-image img, .room-card img {
+  transition: transform 500ms var(--easing), filter 300ms var(--easing);
+}
+.gallery-image:hover img, .room-card:hover img {
+  transform: scale(1.04);
+  filter: saturate(1.05) contrast(1.02);
+}
+
+/* Reveal / scroll-entry animation: fade + scale */
+.reveal {
+  opacity: 0;
+  transform: translateY(10px) scale(0.995);
+  transition: opacity var(--dur) var(--easing), transform var(--dur) var(--easing);
+  will-change: opacity, transform;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Container-level stagger helper; JS will add delays inline for children */
+.stagger-reveal > * {
+  opacity: 0;
+  transform: translateY(10px) scale(0.995);
+  transition: opacity var(--dur) var(--easing), transform var(--dur) var(--easing);
+}
+
+/* Simple underline link animation */
+.link-underline {
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -3px;
+  height: 2px;
+  background: linear-gradient(90deg,var(--accent),var(--accent-2));
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 260ms var(--easing);
+}
+.link-underline:hover::after, .link-underline:focus::after {
+  transform: scaleX(1);
+}
+
+/* Ripple effect wrapper (JS injects .ripple span) */
+.btn-ripple { position: relative; overflow: hidden; }
+.btn-ripple .ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  transform: scale(0);
+  animation: ripple 700ms var(--easing);
+  pointer-events: none;
+}
+@keyframes ripple {
+  to { transform: scale(8); opacity: 0; }
+}
+
+/* Subtle entrance for hero text */
+.hero .hero-content { backface-visibility: hidden; }
+.hero .hero-content.fade-in { opacity: 0; transform: translateY(8px); transition: opacity 640ms var(--easing), transform 640ms var(--easing); }
+.hero .hero-content.fade-in.visible { opacity: 1; transform: none; }
+
+/* Utility: small stagger data attribute fallback (used by JS) */
+[data-stagger] > * { opacity: 0; transform: translateY(8px); }
+
+/* prefers-reduced-motion fallback */
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .stagger-reveal > *, .gallery-image img, .room-card img, .hero .hero-content { transition: none !important; animation: none !important; transform: none !important; opacity: 1 !important; }
+}
+
+/* Typography */
+html { font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; color: #0f1720; }
+h1,h2,h3,h4 { font-family: 'Playfair Display', Georgia, serif; line-height:1.05; margin:0 0 .6em 0; }
+p,li,button,input { line-height:1.6; }
+
+/* Container centering */
+.content {
+  max-width: var(--container-max);
+  margin: 88px auto 48px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Sticky navbar: base + scrolled state */
+.navbar {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1200;
+  background: transparent;
+  transition: background 300ms var(--easing), box-shadow 300ms var(--easing), transform 300ms var(--easing);
+  backdrop-filter: blur(6px);
+}
+.navbar.scrolled {
+  background: var(--nav-bg);
+  box-shadow: 0 8px 28px rgba(9,12,16,0.28);
+}
+
+/* Desktop layout for nav links */
+.navbar .navbar-content { max-width: var(--container-max); margin:0 auto; padding:12px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.nav-links { display:flex; gap:16px; align-items:center; list-style:none; margin:0; padding:0; }
+.nav-links a { color: #fff; text-decoration:none; padding:8px 10px; border-radius:8px; transition: background 180ms; }
+.nav-links a:hover { background: rgba(255,255,255,0.06); }
+
+/* Mobile: hamburger reveals nav (keeps your existing menubtn logic but ensure .navbar.show used) */
+.menu-btn { display:none; background:transparent; color:#fff; border:none; font-size:1.6rem; }
+@media (max-width: 768px){
+  .nav-links { display:none; flex-direction:column; gap:12px; width:100%; }
+  .navbar.show .nav-links { display:flex; background: rgba(15,23,30,0.98); padding:18px; border-radius:8px; margin-top:8px; }
+  .menu-btn { display:block; position:relative; z-index:1300; }
+}
+
+/* Hero / Carousel */
+.hero { width:100%; overflow:hidden; position:relative; border-radius: 0 0 var(--card-radius) var(--card-radius); }
+.hero .slides { display:flex; transition: transform 700ms ease; will-change: transform; }
+.hero .slide { min-width:100%; height: calc(80vh); display:flex; align-items:center; justify-content:center; position:relative; background-size:cover; background-position:center; }
+.hero .overlay { position:absolute; inset:0; background: linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.55)); }
+.hero .hero-content { position:relative; z-index:2; color:#fff; text-align:center; max-width:980px; padding: 24px; }
+.hero h2 { font-size:clamp(1.6rem, 3.4vw, 2.6rem); margin-bottom:8px; opacity:0; transform: translateY(10px); transition: opacity 600ms var(--easing), transform 600ms var(--easing); }
+.hero.show-text h2 { opacity:1; transform:none; }
+.hero p { color: rgba(255,255,255,0.92); margin-bottom:12px; opacity:0; transform: translateY(8px); transition: opacity 700ms var(--easing) 120ms, transform 700ms var(--easing) 120ms; }
+.hero.show-text p { opacity:1; transform:none; }
+
+/* CTA */
+.cta { display:inline-block; background: linear-gradient(90deg,var(--accent),var(--accent-2)); color:white; padding:10px 18px; border-radius:10px; text-decoration:none; font-weight:600; transition: transform 160ms var(--easing), box-shadow 160ms var(--easing); }
+.cta:hover { transform: translateY(-3px); box-shadow:0 12px 28px rgba(6,120,120,0.12); }
+
+/* hero dots / controls */
+.hero .controls { position:absolute; left:50%; transform:translateX(-50%); bottom:18px; display:flex; gap:8px; z-index:3; }
+.hero .dot { width:10px; height:10px; border-radius:999px; background:rgba(255,255,255,0.36); border: none; cursor:pointer; }
+.hero .dot.active { background:#fff; transform:scale(1.1); }
+
+/* Room cards */
+.room-grid {
+    /* mobile-first: 1 column */
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(1, 1fr);
+    grid-auto-rows: 1fr;   /* equal row heights */
+    align-items: start;
+}
+
+/* Tablet: 2 columns */
+@media (min-width: 640px) {
+    .room-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Desktop / Large screens: 3 columns */
+@media (min-width: 992px) {
+    .room-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Ensure cards fill available height */
+.room-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    /* NEW: visible border to make cards stand out */
+    border: 1px solid rgba(15,25,30,0.06);
+    background-clip: padding-box; /* ensures border doesn't overlap box-shadow */
+}
+
+/* NEW: subtle border accent on hover (keeps existing lift effect) */
+.room-card:hover {
+    border-color: rgba(6,120,120,0.12);
+    transform: translateY(-6px);
+    box-shadow: 0 22px 48px rgba(15,25,30,0.08);
+}
+
+/* Fix: keep room images moderate height so they don't hide card content */
+.content .room-grid .room-card img {
+    width: 100%;
+    height: 220px;            /* moderate fixed image height */
+    max-height: 220px;
+    object-fit: cover;        /* crop to fill without distortion */
+    object-position: center;  /* keep center of image visible */
+    display: block;
+}
+
+/* Slightly smaller images on narrower screens */
+@media (max-width: 992px) {
+    .content .room-grid .room-card img {
+        height: 180px;
+        max-height: 180px;
+    }
+}
+@media (max-width: 640px) {
+    .content .room-grid .room-card img {
+        height: 160px;
+        max-height: 160px;
+    }
+}
+
+/* Ensure body stretches so badges/buttons align to bottom */
+.room-card .room-body {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ensure card body is visible and actions aligned */
+.content .room-grid .room-card .room-body {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* push price/button to bottom */
+    gap: 10px;
+}
+
+/* Make badge and action layout consistent */
+.content .room-grid .room-card .badge {
+    font-size: 0.95rem;
+    padding: 6px 10px;
+}
+.content .room-grid .room-card .btn-soft {
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+/* Small visual tweak: give some breathing room under the section heading */
+.content section#rooms h2 {
+    margin-bottom: 12px;
+}
+
+/* Gallery uniform cards + hover */
+.gallery { column-gap: 16px; -webkit-column-gap:16px; column-fill: balance; }
+.gallery-image { display:inline-block; width:100%; margin:0 0 16px; border-radius:10px; overflow:hidden; background:#f6f7f8; }
+.gallery-image img { width:100%; height:260px; object-fit:cover; transform-origin:center center; transition: transform 420ms var(--easing); }
+.gallery-image:hover img { transform: scale(1.04); }
+
+/* Fade-in on scroll (utility) */
+.fade-in { opacity:0; transform: translateY(10px); transition: opacity 600ms var(--easing), transform 600ms var(--easing); }
+.fade-in.visible { opacity:1; transform:none; }
+
+/* prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .hero .slides, .hero .slide, .room-card, .gallery-image img { transition: none !important; animation: none !important; }
+}
+
+/* Responsive tweaks */
+@media (max-width:900px){
+  .hero .slide { height: 56vh; }
+  .gallery-image img { height:200px; }
+}
+@media (max-width:480px){
+  .hero .slide { height:48vh; }
+  .gallery-image img { height:160px; }
+}
+
 /* Reset and Base Styles */
 *,
 *::before,

@@ -175,5 +175,58 @@
         </script>
         <script src="js/login_check.js"></script>
         <script src="js/menubtn.js"></script>
+
+        <!-- Lightbox overlay (add once near end of body) -->
+<div id="lightbox" aria-hidden="true" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.86);align-items:center;justify-content:center;z-index:10050;">
+  <button id="lbClose" aria-label="Close" style="position:absolute;top:18px;right:18px;background:transparent;border:none;color:#fff;font-size:28px;">✕</button>
+  <img id="lbImg" src="" alt="" style="max-width:92%;max-height:82%;border-radius:8px;box-shadow:0 18px 50px rgba(0,0,0,0.6);">
+  <figcaption id="lbCaption" style="color:#fff;margin-top:12px;text-align:center;max-width:92%;"></figcaption>
+</div>
+
+<script>
+// Lightweight gallery lightbox (delegated)
+(function(){
+  const lightbox = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const lbCaption = document.getElementById('lbCaption');
+  const lbClose = document.getElementById('lbClose');
+
+  function open(src, alt, caption){
+    lbImg.src = src;
+    lbImg.alt = alt || '';
+    lbCaption.textContent = caption || '';
+    lightbox.style.display = 'flex';
+    lightbox.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+  }
+  function close(){
+    lightbox.style.display = 'none';
+    lightbox.setAttribute('aria-hidden','true');
+    lbImg.src = '';
+    lbCaption.textContent = '';
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('click', function(e){
+    // Only handle clicks that occurred inside a gallery container
+    const galleryAncestor = e.target.closest('.gallery');
+    if (!galleryAncestor) return; // not a gallery click — do not intercept
+
+    // Find the image that was clicked (img inside gallery)
+    const img = e.target.closest('img');
+    if (!img || !galleryAncestor.contains(img)) return;
+
+    // Prevent default navigation and open lightbox
+    e.preventDefault();
+    const caption = img.closest('figure') ? img.closest('figure').querySelector('figcaption')?.textContent : '';
+    open(img.src, img.alt, caption || img.alt || '');
+  });
+
+  lbClose.addEventListener('click', close);
+  lightbox.addEventListener('click', function(e){ if(e.target === lightbox) close(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') close(); });
+})();
+</script>
+    </div>
 </body>
 </html>

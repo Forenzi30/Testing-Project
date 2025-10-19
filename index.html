@@ -9,57 +9,116 @@
     <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon"/>
 </head>
 <body>
-<button class="menu-btn" id="menuBtn">☰</button>
-<nav class="navbar" id="navbar">
-    <div class="navbar-content">
-        <a href="index.html" class="logo-link">
-            <img height="60" src="./images/Logo1.png" width="60" alt="" class="logo">
-        </a>
-        <ul class="nav-links">
-            <li><a href="room page.html">Rooms</a></li>
-            <li><a href="food&drink.html">Food & Drink</a></li>
-            <li><a href="gallery.html">Gallery</a></li>
-            <li><a href="contactUs.html">Contact</a></li>
-        </ul>
-        <div class="nav-buttons">
-            <a href="order.html" class="nav-btn">Order</a>
-            <a href="login.html" class="nav-btn">Login</a>
-        </div>
+<button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+
+<nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+  <div class="navbar-content">
+    <a href="index.html" class="logo-link" aria-label="Hotel 999 home">
+      <img src="./images/Logo1.png" width="60" height="60" alt="Hotel 999 logo" class="logo">
+    </a>
+
+    <ul class="nav-links" role="menubar" aria-hidden="false">
+      <li role="none"><a role="menuitem" href="room page.html">Rooms</a></li>
+      <li role="none"><a role="menuitem" href="food&drink.html">Food & Drink</a></li>
+      <li role="none"><a role="menuitem" href="gallery.html">Gallery</a></li>
+      <li role="none"><a role="menuitem" href="contactUs.html">Contact</a></li>
+    </ul>
+
+    <div class="nav-buttons">
+      <a class="nav-btn" href="order.html">Order</a>
+      <a class="nav-btn" href="login.html">Login</a>
     </div>
+  </div>
 </nav>
-    <div class="container">
-        <div class="content">
-            <header>
-                <div class="header-text">
-                    <h1>HOTEL 999</h1>
-                </div>
-            </header>
 
-            <section id="main">
-                <div class="main-images">
-                    <img src="images/main-image1.png" alt="Main Image 1">
-                    <img src="images/main-image2.png" alt="Main Image 2">
-                    <img src="images/main-image3.png" alt="Main Image 3">
-                </div>
-                <p class="deskripsi">Hotel 999 is strategically located in an urban area that is easily accessible to both tourists and business travelers. The hotel's sturdy and simple building creates a comfortable and functional atmosphere for guests. Each room is equipped with air conditioning and basic amenities to ensure a comfortable stay.</p><br>
-                <p class="deskripsi">Guests can enjoy the authentic local atmosphere with a variety of culinary options and local businesses. The hotel's location near the main road provides easy access to various important destinations in the city, making it an ideal choice for those looking for practical accommodation at an affordable price.</p>
-            </section>
+<!-- Hero carousel -->
+<div class="hero" id="hero" role="region" aria-label="Promotional carousel">
+  <div class="slides" id="heroSlides">
+    <section class="slide" style="background-image:url('images/main-image1.png');" aria-roledescription="slide" data-index="0">
+      <div class="overlay" aria-hidden="true"></div>
+      <div class="hero-content">
+        <h2>Relax at Hotel 999 — seaside calm, modern comfort</h2>
+        <p>Simple, friendly and affordable hospitality for every traveler.</p>
+        <a class="cta" href="order.html">Book Now</a>
+      </div>
+    </section>
+    <section class="slide" style="background-image:url('images/main-image2.png');" data-index="1">
+      <div class="overlay" aria-hidden="true"></div>
+      <div class="hero-content">
+        <h2>Enjoy local flavors and warm service</h2>
+        <p>Breakfast, casual dining and local delights.</p>
+        <a class="cta" href="food&drink.html">Explore Dining</a>
+      </div>
+    </section>
+    <section class="slide" style="background-image:url('images/main-image3.png');" data-index="2">
+      <div class="overlay" aria-hidden="true"></div>
+      <div class="hero-content">
+        <h2>Create lasting memories</h2>
+        <p>Comfortable rooms and convenient location for your stay.</p>
+        <a class="cta" href="room page.html">See Rooms</a>
+      </div>
+    </section>
+  </div>
 
-            <section id="rooms">
-                <h2>Rooms</h2>
-                <div class="room">
-                    <img src="images/room1.jpg" alt="Room 1">
-                    <h3>Deluxe Room</h3>
-                    <p>Spacious and luxurious, our deluxe rooms provide a comfortable stay with all modern amenities.</p>
-                </div>
-                <div class="room">
-                    <img src="images/room2.jpg" alt="Room 2">
-                    <h3>Executive Suite</h3>
-                    <p>Experience luxury in our executive suite, featuring stunning views and extra amenities.</p>
-                </div>
-            </section>
+  <div class="controls" id="heroControls" role="tablist" aria-label="Carousel controls"></div>
+</div>
 
-            <footer>
+<div class="container">
+  <div class="content">
+    <!-- ...existing content above rooms ... -->
+
+    <!-- Rooms section converted to responsive cards -->
+    <section id="rooms" class="fade-in">
+      <h2>Rooms</h2>
+      <div class="room-grid" id="roomGrid" aria-live="polite">
+        <!-- Standard Room -->
+        <article class="room-card" tabindex="0" aria-labelledby="room1Title">
+          <img src="images/room1.jpg" alt="Standard Room photo">
+          <div class="room-body">
+            <h3 id="room1Title">Standard Room</h3>
+            <p style="text-align: center;">Spacious and comfortable standard room with essential amenities.</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span class="badge">Rp 120.000</span>
+              <a class="btn-soft" href="room page.html">View Details</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Deluxe Room (middle) -->
+        <article class="room-card" tabindex="0" aria-labelledby="room2Title">
+          <img src="images/room2.jpg" alt="Deluxe Room photo">
+          <div class="room-body">
+            <h3 id="room2Title">Deluxe Room</h3>
+            <p style="text-align: center;">With an elegant design and a touch of luxury, our Deluxe Rooms bring a special feel to your stay.</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span class="badge">Rp 145.000</span>
+              <a class="btn-soft" href="room page.html">View Details</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Executive Suite (right) -->
+        <article class="room-card" tabindex="0" aria-labelledby="room3Title">
+          <img src="images/room3.jpg" alt="Executive Suite photo">
+          <div class="room-body">
+            <h3 id="room3Title">Executive Suite</h3>
+            <p style="text-align: center;">Experience luxury in our executive suite, featuring extra space and exclusive amenities.</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span class="badge">Rp 170.000</span>
+              <a class="btn-soft" href="room page.html">View Details</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ...rest of content remains unchanged... -->
+  </div>
+</div>
+
+<!-- footer unchanged -->
+<footer>
                 <div class="footer-column">
                     <h4>Hotel 999</h4>
                     <div class="copyright">
@@ -67,9 +126,79 @@
                     </div>
                 </div>
             </footer>
-        </div>
-    </div>
-    <script src="js/login_check.js"></script>
-    <script src="js/menubtn.js"></script>
+<!-- ...existing footer... -->
+
+<script src="js/login_check.js"></script>
+<script src="js/menubtn.js"></script>
+<!-- Include UI helpers -->
+<script src="js/ui.js"></script>
+<script>
+/* index UI: carousel, sticky nav, hamburger, scroll reveal */
+(function(){
+  // Carousel
+  const slidesWrap = document.getElementById('heroSlides');
+  const slides = Array.from(slidesWrap.children);
+  const controls = document.getElementById('heroControls');
+  let index = 0, autoTimer = null;
+  const interval = 5000;
+
+  function buildControls(){
+    slides.forEach((_, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'dot' + (i===0 ? ' active' : '');
+      btn.setAttribute('aria-label', 'Go to slide ' + (i+1));
+      btn.addEventListener('click', ()=> goTo(i));
+      controls.appendChild(btn);
+    });
+  }
+  function update(){
+    slidesWrap.style.transform = `translateX(-${index * 100}%)`;
+    controls.querySelectorAll('.dot').forEach((d,i)=> d.classList.toggle('active', i===index));
+    // reveal hero text with subtle animation
+    const hero = document.getElementById('hero');
+    hero.classList.add('show-text');
+  }
+  function next(){ index = (index + 1) % slides.length; update(); }
+  function goTo(i){ index = i; update(); resetTimer(); }
+  function resetTimer(){ if(autoTimer) clearInterval(autoTimer); autoTimer = setInterval(next, interval); }
+
+  buildControls();
+  update();
+  resetTimer();
+  slidesWrap.addEventListener('mouseenter', ()=> clearInterval(autoTimer));
+  slidesWrap.addEventListener('mouseleave', resetTimer);
+  // keyboard support
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowLeft') { index = (index-1+slides.length)%slides.length; update(); resetTimer(); }
+    if(e.key === 'ArrowRight'){ index = (index+1)%slides.length; update(); resetTimer(); }
+  });
+
+  // Sticky nav on scroll
+  const navbar = document.getElementById('navbar');
+  function onScroll(){
+    if(window.scrollY > 24) navbar.classList.add('scrolled'); else navbar.classList.remove('scrolled');
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  // Hamburger: toggle .navbar.show (menubtn.js may also handle this; keep simple fallback)
+  const menuBtn = document.getElementById('menuBtn');
+  menuBtn.addEventListener('click', function(){
+    navbar.classList.toggle('show');
+  });
+
+  // Scroll reveal utility using IntersectionObserver
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, {threshold: 0.12});
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+})();
+</script>
 </body>
 </html>

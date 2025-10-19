@@ -37,6 +37,8 @@ function updateNav() {
             e.preventDefault();
             localStorage.setItem('isLoggedIn', 'false');
             localStorage.removeItem('username');
+            // Remove admin flag on logout to prevent stale admin access
+            localStorage.removeItem('isAdmin');
             updateNav();
             // If on order.html, redirect to index.html after logout
             if (window.location.pathname.endsWith('order.html')) {
