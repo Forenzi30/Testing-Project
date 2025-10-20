@@ -1,14 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- page-specific CSS first (keeps page tweaks) -->
     <link rel="stylesheet" href="css/room.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" type="text/css" rel="stylesheet">
     <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon"/>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rooms</title>
+    <style>
+        /* slideshow: simple, responsive */
+        .slideshow { position: relative; width: 100%; border-radius:8px; overflow: hidden; background:#f4f6f8; }
+        .slideshow .slides { display:flex; transition: transform 480ms cubic-bezier(.2,.9,.2,1); will-change: transform; width:100%; }
+        .slideshow .slide { min-width:100%; flex:0 0 100%; display:block; width:100%; object-fit:cover; height:320px; }
+        .slideshow .slide img { width:100%; height:100%; object-fit:cover; display:block; }
+        @media (max-width:900px){ .slideshow .slide { height:240px; } }
+        .slideshow .slide-prev,
+        .slideshow .slide-next {
+          position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.36); color:#fff; border:none; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;
+        }
+        .slideshow .slide-prev { left:12px; } .slideshow .slide-next { right:12px; }
+        .slideshow .slide-indicators { position:absolute; left:50%; transform:translateX(-50%); bottom:10px; display:flex; gap:8px; z-index:5; }
+        .slideshow .indicator { width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,0.5); cursor:pointer; border:1px solid rgba(0,0,0,0.08); padding:0; }
+        .slideshow .indicator.active { background:#fff; transform:scale(1.1); box-shadow:0 6px 18px rgba(0,0,0,0.12); }
+        /* make slideshow focusable for keyboard nav */
+        .slideshow:focus { outline: none; box-shadow: 0 0 0 6px rgba(14,165,164,0.12); }
+    </style>
 </head>
-<body>
+<body class="page-room">
 <button class="menu-btn" id="menuBtn">☰</button>
 <nav class="navbar" id="navbar">
     <div class="navbar-content">
@@ -77,14 +96,32 @@
                     <p><b>Price: Rp 145.000 / night</b></p>
                 </div>
 
-                <div class="midright-content"> 
-                    <img src="./images/room6.jpg" alt="" class="img2">
+                <div class="midright-content">
+                    <div class="slideshow" data-autoplay="true" data-interval="4000" aria-roledescription="carousel" aria-label="Deluxe room images">
+                        <div class="slides">
+                            <img class="slide" src="./images/room2.jpg" alt="Deluxe Room - view 1">
+                            <img class="slide" src="./images/room5.jpg" alt="Deluxe Room - view 2">
+                            <img class="slide" src="./images/room6.jpg" alt="Deluxe Room - view 3">
+                        </div>
+                        <button class="slide-prev" aria-label="Previous slide">‹</button>
+                        <button class="slide-next" aria-label="Next slide">›</button>
+                        <div class="slide-indicators" role="tablist" aria-label="Slide indicators"></div>
+                    </div>
                  </div>
             </div>
 
             <div class="main-content">
                 <div class="topleft-content">
-                   <img src="./images/room4.jpg" alt="" class="img1"> 
+                    <div class="slideshow" data-autoplay="true" data-interval="4200" aria-roledescription="carousel" aria-label="Executive suite images">
+                        <div class="slides">
+                            <img class="slide" src="./images/room3.jpg" alt="Executive Suite - view 1">
+                            <img class="slide" src="./images/room4.jpg" alt="Executive Suite - view 2">
+                            <img class="slide" src="./images/room9.jpg" alt="Executive Suite - view 3">
+                        </div>
+                        <button class="slide-prev" aria-label="Previous slide">‹</button>
+                        <button class="slide-next" aria-label="Next slide">›</button>
+                        <div class="slide-indicators" role="tablist" aria-label="Slide indicators"></div>
+                    </div>
                 </div>
 
                 <div class="topright-content">
@@ -105,18 +142,102 @@
                 </div>   
             </div>
 
-            <!-- Footer -->
-            <footer>
-                <div class="footer-column">
-                    <h4>Hotel 999</h4>
-                    <div class="copyright">
-                        <p>© 2025</p>
-                    </div>
-                </div>
-            </footer>
+        </div>  <!-- end .content -->
+    </section>  <!-- end .container -->
+
+<!-- MOVED: Footer now outside the .container (matches index.html) -->
+<footer>
+    <div class="footer-column">
+        <h4>Hotel 999</h4>
+        <div class="copyright">
+            <p>© 2025</p>
         </div>
-    </section>
+    </div>
+</footer>
+
     <script src="js/login_check.js"></script>
     <script src="js/menubtn.js"></script>
+    <!-- bottom inline script: improved slideshow initializer -->
+    <script>
+/* Minimal slideshow initializer (multiple instances) - robust version */
+(function(){
+  const slideshows = document.querySelectorAll('.slideshow');
+  slideshows.forEach(init);
+
+  function init(el){
+    try {
+      // make focusable for keyboard controls
+      el.tabIndex = el.tabIndex || 0;
+
+      const slidesWrap = el.querySelector('.slides');
+      const slides = Array.from(el.querySelectorAll('.slide'));
+      if (!slidesWrap || slides.length === 0) return;
+
+      // Ensure images fill their slide (in case markup is <div class="slide"><img/></div> or <img.slide/>)
+      slides.forEach(s => {
+        if (s.tagName === 'IMG') {
+          s.style.width = '100%';
+          s.style.display = 'block';
+        } else {
+          const img = s.querySelector('img');
+          if (img) { img.style.width = '100%'; img.style.display = 'block'; }
+        }
+      });
+
+      // indicators
+      const indicators = el.querySelector('.slide-indicators');
+      indicators.innerHTML = '';
+      slides.forEach((_,i)=>{
+        const node = document.createElement('button');
+        node.className = 'indicator';
+        node.setAttribute('aria-label','Go to slide '+(i+1));
+        node.type = 'button';
+        node.addEventListener('click', ()=> go(i));
+        indicators.appendChild(node);
+      });
+
+      let idx = 0, timer = null;
+      const prev = el.querySelector('.slide-prev');
+      const next = el.querySelector('.slide-next');
+      const autoplay = el.dataset.autoplay === 'true';
+      const interval = Math.max(1000, parseInt(el.dataset.interval || 4000, 10));
+
+      function update(){
+        // defensive: clamp idx
+        idx = ((idx % slides.length) + slides.length) % slides.length;
+        slidesWrap.style.transform = `translateX(-${idx*100}%)`;
+        const nodeList = indicators.querySelectorAll('.indicator');
+        nodeList.forEach((n,i)=> n.classList.toggle('active', i===idx));
+      }
+      function go(i){ idx = (i + slides.length) % slides.length; update(); reset(); }
+
+      if (prev) prev.addEventListener('click', ()=> go(idx-1));
+      if (next) next.addEventListener('click', ()=> go(idx+1));
+
+      // keyboard support when slideshow focused
+      el.addEventListener('keydown', (e)=> {
+        if (e.key === 'ArrowLeft') { e.preventDefault(); go(idx-1); }
+        if (e.key === 'ArrowRight') { e.preventDefault(); go(idx+1); }
+      });
+
+      // autoplay
+      function reset(){ if(timer) { clearInterval(timer); timer = null; } if(autoplay){ timer = setInterval(()=> go(idx+1), interval); } }
+
+      // pause on hover/focus
+      ['mouseenter','focusin'].forEach(ev=> el.addEventListener(ev, ()=> { if(timer) clearInterval(timer); }));
+      ['mouseleave','focusout'].forEach(ev=> el.addEventListener(ev, ()=> reset()));
+
+      // init: only set active if indicator exists
+      const firstIndicator = indicators.querySelector('.indicator');
+      if (firstIndicator) firstIndicator.classList.add('active');
+      update();
+      reset();
+    } catch (err) {
+      // avoid breaking page if slideshow init fails
+      console.error('Slideshow init error:', err);
+    }
+  }
+})();
+    </script>
 </body>
 </html>

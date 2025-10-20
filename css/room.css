@@ -118,6 +118,7 @@
   .content {
     margin-left: 0 !important;
     margin-top: 90px; /* Adjust based on navbar height */
+    margin-bottom: 0; /* removed large bottom gap so footer sits directly under content */
     padding: 20px;
   }
   
@@ -187,98 +188,33 @@
 
   /* Footer Styles */
 footer {
+    width: 100%;
+    box-sizing: border-box;
     background-color: #333;
     color: white;
     padding: 20px;
-    margin-top: auto;
+    margin-top: 0; /* ensure no extra gap above footer */
+    display: block;
 }
 
 .footer-column {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 0;
 }
 
 .footer-column h4 {
-    margin-bottom: 15px;  /* This creates space between h4 and the content below it */
+    margin: 0 0 12px 0;
     font-size: 1.2em;
-    border-bottom: 2px solid white;  /* This adds a line under each h4 */
-    padding-bottom: 5px;
+    border-bottom: 2px solid rgba(255,255,255,0.9);
+    padding-bottom: 8px;
+    display: inline-block;
 }
 
-.copyright, .media-social, .alamat {
-    padding-left: 10px;  /* This indents the content under each h4 */
-}
-
-.media-social a {
-    color: white;
-    margin-right: 10px;
-    font-size: 1.2em;
-}
-
-.media-social a:hover {
-    color: #61A4C9;
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-    .main-images {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 767px) {
-  .main-content {
-        display: block;
-        margin: 15px 0;
-    }
-    .topleft-content,
-    .topright-content,
-    .midleft-content,
-    .midright-content {
-        margin: 10px 0;
-    }
-    .img1, .img2 {
-        max-width: 100%;
-        height: auto;
-        margin-bottom: 10px;
-    }
-    header {
-        margin-left: 0;
-        text-align: center;
-    }
-    .navbar-content {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 10px;
-    }
-    .nav-links {
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 10px;
-    }
-    .nav-buttons {
-        margin-top: 10px;
-    }
-    footer {
-        display: block;
-        text-align: center;
-    }
-    .footer-column {
-        margin-bottom: 20px;
-    }
-}
-
-@media (max-width: 600px) {
-    .main-images {
-        grid-template-columns: 1fr;
-    }
-    .room {
-        margin-bottom: 20px;
-        padding: 10px;
-    }
-    .content {
-        padding: 10px;
-    }
+/* Ensure content does not add a large gap below the page */
+.content {
+    margin-top: 90px; /* keep existing top offset */
+    margin-bottom: 0; /* removed large bottom gap so footer sits directly under content */
+    padding: 20px;
 }
 
 /* Hide navbar on mobile by default */

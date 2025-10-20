@@ -36,8 +36,9 @@ function updatePriceDisplay(roomType) {
 
 function updateOrderButtonState() {
     const orderBtn = document.querySelector('.order-btn');
-    // Only enable if logged in and room is available
-    orderBtn.disabled = !isLoggedIn() || currentStock <= 0;
+    if (!orderBtn) return;
+    // Enable order button when room is available (guests allowed)
+    orderBtn.disabled = currentStock <= 0;
 }
 
 // Call this after checking availability and on page load
@@ -73,81 +74,78 @@ document.querySelectorAll('input[name="room"]').forEach(function(radio) {
 document.addEventListener('DOMContentLoaded', function() {
     const orderBtn = document.querySelector('.order-btn');
     if (orderBtn) {
-        orderBtn.disabled = !isLoggedIn();
+        // Default enabled if stock > 0 (guests allowed)
+        orderBtn.disabled = currentStock <= 0;
         updateOrderButtonState();
     }
-});
 
+    // attach event listener safely (if present)
+    const orderBtnElem = document.querySelector('.order-btn');
+    if (orderBtnElem) {
+        orderBtnElem.addEventListener('click', async function(event) {
+            event.preventDefault();
 
-// Handle order button click
-document.querySelector('.order-btn').addEventListener('click', function(event) {
-    // Always prevent form submission (if button is inside a form)
-    event.preventDefault();
-
-    // Check login status first
-    if (!isLoggedIn()) {
-        alert('You must login first to order a room.');
-        return;
-    }
-
-    if (currentStock <= 0) {
-        alert('Room not available!');
-        return;
-    }
-    const selectedRoom = document.querySelector('input[name="room"]:checked');
-    if (!selectedRoom) {
-        alert('Please select a room type.');
-        return;
-    }
-    const roomType = selectedRoom.value;
-    const username = localStorage.getItem('username');
-
-    // Collect order form data
-    const form = document.getElementById('order-form');
-    const formData = new FormData(form);
-
-    const orderData = {
-        username,
-        roomType: mapRoomType(roomType),
-        name: formData.get('name'),
-        email: formData.get('email'),
-        check_in: formData.get('check_in'),
-        check_out: formData.get('check_out'),
-        adults: formData.get('adults'),
-        childrens: formData.get('childrens'),
-    };
-
-    fetch('/api/order-room', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderData)
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            // Order successful, now initiate payment
-            alert('Order created successfully! Redirecting to payment...');
-            
-            // Add mobile_number and order ID to orderData for payment
-            orderData.mobile_number = formData.get('mobile_number');
-            orderData.midtrans_order_id = data.order_id; // Get order ID from response
-            
-            // Call Midtrans payment function
-            if (typeof createMidtransPayment === 'function') {
-                createMidtransPayment(orderData);
-            } else {
-                alert('Payment system not available. Please contact support.');
+            // Check stock first
+            if (currentStock <= 0) {
+                alert('Room not available!');
+                return;
             }
-            
-            // Refresh availability after order
-            selectedRoom.dispatchEvent(new Event('change'));
-        } else {
-            alert('Order failed: ' + data.message);
-        }
-    })
-    .catch(() => {
-        alert('Error ordering room.');
-    });
+
+            const selectedRoom = document.querySelector('input[name="room"]:checked');
+            if (!selectedRoom) {
+                alert('Please select a room type.');
+                return;
+            }
+            const roomType = selectedRoom.value;
+            const username = localStorage.getItem('username'); // may be null for guests
+
+            // Collect order form data
+            const form = document.getElementById('order-form');
+            if (!form) {
+                alert('Order form not found.');
+                return;
+            }
+            const formData = new FormData(form);
+
+            const orderData = {
+                // include username only when present
+                ...(username ? { username } : {}),
+                roomType: mapRoomType(roomType),
+                name: formData.get('name'),
+                email: formData.get('email'),
+                check_in: formData.get('check_in'),
+                check_out: formData.get('check_out'),
+                adults: formData.get('adults'),
+                childrens: formData.get('childrens'),
+            };
+
+            try {
+                const res = await fetch('/api/order-room', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert('Order created successfully! Redirecting to payment...');
+                    // attach midtrans order id then create payment
+                    orderData.midtrans_order_id = data.order_id;
+                    if (typeof createMidtransPayment === 'function') {
+                        createMidtransPayment(orderData);
+                    } else {
+                        alert('Payment system not available. Please contact support.');
+                    }
+                    // refresh availability
+                    selectedRoom.dispatchEvent(new Event('change'));
+                } else {
+                    alert('Order failed: ' + (data.message || 'Unknown error'));
+                }
+            } catch (err) {
+                console.error('Order error:', err);
+                alert('Error ordering room.');
+            }
+        });
+    }
 });
 
 document.addEventListener('DOMContentLoaded', function () {

@@ -23,7 +23,7 @@
   --bg-100: #f6f8fa;
   --surface: #ffffff;
   --muted: #6b7280;
-  --text: #0f1720;
+  --text: #000000;
   --accent: #0ea5a4;
   --accent-2: #036d6b;
   --card-border: rgba(15,25,30,0.06);
@@ -41,6 +41,10 @@
 }
 h1 { font-size: var(--fs-h1); letter-spacing: -0.02em; color:var(--text); }
 h2 { font-size: var(--fs-h2); color:var(--text); }
+
+h2, .slide{
+    color: #ffffff;
+}
 
 /* Page background and content panel for clarity */
 html, body { background: var(--bg-100); color: var(--text); }

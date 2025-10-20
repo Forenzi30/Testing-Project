@@ -2,22 +2,26 @@
 function updateNav() {
     const loginBtn = document.querySelector('a[href="login.html"]');
     const navLinks = document.querySelector('.nav-links');
-    let orderLink = document.querySelector('a[href="order.html"]');
-
     if (!loginBtn || !navLinks) return;
 
-    if (localStorage.getItem('isLoggedIn') === 'true') {
-        // Show Order link if not present
-        if (!orderLink) {
-            orderLink = document.createElement('a');
-            orderLink.href = 'order.html';
-            orderLink.textContent = 'Order';
-            orderLink.className = 'nav-btn order-link';
+    // Ensure Order link is always present and visible (guests can see it)
+    let orderLink = document.querySelector('a[href="order.html"]');
+    if (!orderLink) {
+        orderLink = document.createElement('a');
+        orderLink.href = 'order.html';
+        orderLink.textContent = 'Order';
+        orderLink.className = 'nav-btn order-link';
+        // Insert before login button if possible, otherwise append
+        if (loginBtn && loginBtn.parentNode) {
             loginBtn.parentNode.insertBefore(orderLink, loginBtn);
         } else {
-            orderLink.style.display = '';
+            document.querySelector('.nav-buttons')?.appendChild(orderLink);
         }
-        
+    } else {
+        orderLink.style.display = '';
+    }
+
+    if (localStorage.getItem('isLoggedIn') === 'true') {
         // Show History link if not present
         let historyLink = document.querySelector('a[href="history.html"]');
         if (!historyLink) {
@@ -48,15 +52,10 @@ function updateNav() {
             }
         };
     } else {
-        // Hide Order link if present
-        if (orderLink) {
-            orderLink.style.display = 'none';
-        }
-        // Hide History link if present
+        // Guest: keep Order visible; hide History if present
         const historyLink = document.querySelector('a[href="history.html"]');
-        if (historyLink) {
-            historyLink.style.display = 'none';
-        }
+        if (historyLink) historyLink.style.display = 'none';
+
         // Show Login button
         loginBtn.textContent = 'Login';
         loginBtn.href = 'login.html';
