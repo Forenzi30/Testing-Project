@@ -48,7 +48,7 @@
       left: 0;
       width: 100%;
       background-color: #333;
-      background-image: url('../images/navbar-background.png');
+      /*background-image: url('../images/navbar-background.png');*/
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -186,35 +186,27 @@
   }
 
 
-  /* Footer Styles */
+/* Footer Styles */
 footer {
-    width: 100%;
-    box-sizing: border-box;
     background-color: #333;
     color: white;
     padding: 20px;
-    margin-top: 0; /* ensure no extra gap above footer */
-    display: block;
+    margin-top: auto;
 }
 
 .footer-column {
     text-align: center;
-    margin-bottom: 0;
 }
 
 .footer-column h4 {
-    margin: 0 0 12px 0;
+    margin-bottom: 15px;  /* This creates space between h4 and the content below it */
     font-size: 1.2em;
-    border-bottom: 2px solid rgba(255,255,255,0.9);
-    padding-bottom: 8px;
-    display: inline-block;
+    border-bottom: 2px solid white;  /* This adds a line under each h4 */
+    padding-bottom: 5px;
 }
 
-/* Ensure content does not add a large gap below the page */
-.content {
-    margin-top: 90px; /* keep existing top offset */
-    margin-bottom: 0; /* removed large bottom gap so footer sits directly under content */
-    padding: 20px;
+.copyright {
+    padding-left: 10px;  /* This indents the content under each h4 */
 }
 
 /* Hide navbar on mobile by default */
