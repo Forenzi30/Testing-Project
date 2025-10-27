@@ -127,9 +127,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 const data = await res.json();
                 if (data.success) {
-                    alert('Order created successfully! Redirecting to payment...');
+                    // Store order info in sessionStorage for later display
+                    sessionStorage.setItem('pendingOrderId', data.order_id);
+                    sessionStorage.setItem('pendingOrderName', data.customer_name);
+                    sessionStorage.setItem('pendingOrderEmail', data.customer_email);
+
                     // attach midtrans order id then create payment
                     orderData.midtrans_order_id = data.order_id;
+                    orderData.name = data.customer_name;
+                    orderData.email = data.customer_email;
+
+                    // Directly open Midtrans payment (no modal to block it)
                     if (typeof createMidtransPayment === 'function') {
                         createMidtransPayment(orderData);
                     } else {

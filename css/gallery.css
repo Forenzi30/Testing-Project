@@ -46,7 +46,7 @@ body {
       left: 0;
       width: 100%;
       background-color: #333;
-      background-image: url('../images/navbar-background.png');
+      /*background-image: url('../images/navbar-background.png');*/
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -454,17 +454,17 @@ a {
   color: inherit;
 }
 
-  /* Footer Styles */
+/* Footer Styles */
 footer {
     background-color: #333;
     color: white;
     padding: 20px;
-    margin-top: auto;
+    margin: auto;
 }
 
 .footer-column {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
 }
 
 .footer-column h4 {
@@ -474,18 +474,8 @@ footer {
     padding-bottom: 5px;
 }
 
-.copyright, .media-social, .alamat {
+.copyright {
     padding-left: 10px;  /* This indents the content under each h4 */
-}
-
-.media-social a {
-    color: white;
-    margin-right: 10px;
-    font-size: 1.2em;
-}
-
-.media-social a:hover {
-    color: #61A4C9;
 }
 
 /* Responsive Design */

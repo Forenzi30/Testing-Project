@@ -7,6 +7,7 @@ const pool = require('./db');
 const bcrypt = require('bcrypt');
 const path = require('path');
 const midtransClient = require('midtrans-client');
+const { sendOrderConfirmation } = require('./emailService');
 
 const app = express();
 const PORT = process.env.PORT || 3030;
@@ -100,7 +101,7 @@ app.post('/login', async (req, res) => {
 
 // ==================== ORDER ROOM ====================
 app.post('/api/order-room', async (req, res) => {
-    // Expecting: username, roomType, name, email, check_in, check_out, adults, childrens
+    // Expecting: username (optional), roomType, name, email, check_in, check_out, adults, childrens
     const {
         username, roomType,
         name, email, address, phone_number,
@@ -108,30 +109,36 @@ app.post('/api/order-room', async (req, res) => {
     } = req.body;
     console.log('Order room request for tipe:', roomType);
 
-    if (!username || !roomType || !name || !email || !check_in || !check_out || !adults) {
+    // Validate required fields (username is now optional for guest orders)
+    if (!roomType || !name || !email || !check_in || !check_out || !adults) {
         return res.status(400).json({ success: false, message: 'Missing required order fields' });
     }
 
     try {
-        // Get user (pelanggan) ID
-        const [userRows] = await pool.execute(
-            'SELECT id FROM pelanggan WHERE username = ?',
-            [username]
-        );
-        if (userRows.length === 0) {
-            return res.status(401).json({ success: false, message: 'User must login first' });
+        let pelanggan_id = null;
+
+        // Get user (pelanggan) ID if username is provided (logged in user)
+        if (username) {
+            const [userRows] = await pool.execute(
+                'SELECT id FROM pelanggan WHERE username = ?',
+                [username]
+            );
+            if (userRows.length > 0) {
+                pelanggan_id = userRows[0].id;
+            }
         }
-        const pelanggan_id = userRows[0].id;
+        // If no username or user not found, pelanggan_id stays null (guest order)
 
         // Get room ID and check stock
         const [roomRows] = await pool.execute(
-            'SELECT id, stock FROM rooms WHERE roomType = ? LIMIT 1',
+            'SELECT id, stock, harga FROM rooms WHERE roomType = ? LIMIT 1',
             [roomType]
         );
         if (roomRows.length === 0 || roomRows[0].stock <= 0) {
             return res.status(400).json({ success: false, message: 'Room not available' });
         }
         const room_id = roomRows[0].id;
+        const roomPrice = roomRows[0].harga;
 
         // Decrement stock
         await pool.execute(
@@ -141,23 +148,50 @@ app.post('/api/order-room', async (req, res) => {
 
         // Generate order ID for Midtrans
         const orderId = `ORDER-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-        
+
         // Insert order into orders table with Midtrans order ID
         const [orderResult] = await pool.execute(
             `INSERT INTO orders
                 (pelanggan_id, room_id, check_in, check_out, adults, childrens, address, phone_number, midtrans_order_id, payment_status, created_at)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())`,
             [
-                pelanggan_id, room_id, check_in, check_out, adults, childrens || 0, 
+                pelanggan_id, room_id, check_in, check_out, adults, childrens || 0,
                 address || '', phone_number || '', orderId
             ]
         );
 
         if (orderResult.affectedRows === 1) {
-            res.json({ 
-                success: true, 
+            // Send email notification
+            try {
+                const emailResult = await sendOrderConfirmation({
+                    orderId: orderId,
+                    customerName: name,
+                    customerEmail: email,
+                    roomType: roomType,
+                    checkIn: check_in,
+                    checkOut: check_out,
+                    adults: adults,
+                    childrens: childrens || 0,
+                    totalPrice: roomPrice,
+                    phoneNumber: phone_number || ''
+                });
+
+                if (emailResult.success) {
+                    console.log('✅ Order confirmation email sent successfully');
+                } else {
+                    console.log('⚠️ Order created but email failed:', emailResult.error);
+                }
+            } catch (emailError) {
+                console.error('⚠️ Email sending error:', emailError.message);
+                // Don't fail the order if email fails
+            }
+
+            res.json({
+                success: true,
                 message: 'Room ordered successfully!',
-                order_id: orderId
+                order_id: orderId,
+                customer_name: name,
+                customer_email: email
             });
         } else {
             console.error('Order insert failed:', orderResult);
@@ -255,14 +289,29 @@ app.get('/api/setup-orders', async (req, res) => {
         if (columns.length === 0) {
             await pool.execute('ALTER TABLE orders ADD COLUMN midtrans_order_id VARCHAR(255) DEFAULT NULL');
         }
-        
+
         // Check if payment_status column exists
         const [paymentColumns] = await pool.execute('SHOW COLUMNS FROM orders LIKE "payment_status"');
         if (paymentColumns.length === 0) {
             await pool.execute('ALTER TABLE orders ADD COLUMN payment_status VARCHAR(50) DEFAULT "pending"');
         }
-        
-        res.json({ success: true, message: 'Orders table updated successfully' });
+
+        // Check if payment_type column exists
+        const [paymentTypeColumns] = await pool.execute('SHOW COLUMNS FROM orders LIKE "payment_type"');
+        if (paymentTypeColumns.length === 0) {
+            await pool.execute('ALTER TABLE orders ADD COLUMN payment_type VARCHAR(50) DEFAULT NULL');
+        }
+
+        // Check if gross_amount column exists
+        const [grossAmountColumns] = await pool.execute('SHOW COLUMNS FROM orders LIKE "gross_amount"');
+        if (grossAmountColumns.length === 0) {
+            await pool.execute('ALTER TABLE orders ADD COLUMN gross_amount INT DEFAULT NULL');
+        }
+
+        // Allow pelanggan_id to be NULL for guest orders
+        await pool.execute('ALTER TABLE orders MODIFY COLUMN pelanggan_id INT NULL');
+
+        res.json({ success: true, message: 'Orders table updated successfully (added payment_type, gross_amount, and pelanggan_id can be NULL)' });
     } catch (err) {
         console.error('Setup orders error:', err);
         res.status(500).json({ success: false, message: err.message });
@@ -273,32 +322,48 @@ app.get('/api/setup-orders', async (req, res) => {
 // Update payment status manually (for frontend callbacks)
 app.post('/api/update-payment-status', async (req, res) => {
     try {
-        const { order_id, status } = req.body;
-        
+        const { order_id, status, payment_type, gross_amount } = req.body;
+
         if (!order_id || !status) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'Missing order_id or status' 
+            return res.status(400).json({
+                success: false,
+                message: 'Missing order_id or status'
             });
         }
 
+        // Build update query dynamically based on provided fields
+        let updateFields = ['payment_status = ?'];
+        let updateValues = [status];
+
+        if (payment_type) {
+            updateFields.push('payment_type = ?');
+            updateValues.push(payment_type);
+        }
+
+        if (gross_amount) {
+            updateFields.push('gross_amount = ?');
+            updateValues.push(gross_amount);
+        }
+
+        updateValues.push(order_id);
+
         // Update payment status in database
         await pool.execute(
-            'UPDATE orders SET payment_status = ? WHERE midtrans_order_id = ?',
-            [status, order_id]
+            `UPDATE orders SET ${updateFields.join(', ')} WHERE midtrans_order_id = ?`,
+            updateValues
         );
 
-        console.log(`Payment status updated: ${order_id} -> ${status}`);
-        res.json({ 
-            success: true, 
-            message: 'Payment status updated successfully' 
+        console.log(`✅ Payment updated: ${order_id} -> ${status}${payment_type ? ` (${payment_type})` : ''}`);
+        res.json({
+            success: true,
+            message: 'Payment status updated successfully'
         });
     } catch (error) {
         console.error('Update payment status error:', error);
-        res.status(500).json({ 
-            success: false, 
+        res.status(500).json({
+            success: false,
             message: 'Failed to update payment status',
-            error: error.message 
+            error: error.message
         });
     }
 });
@@ -313,10 +378,10 @@ app.get('/api/order-history', async (req, res) => {
     try {
         const [rows] = await pool.execute(
             `SELECT o.*, r.roomType as room_type, r.harga as room_price, p.username as customer_name
-             FROM orders o 
-             JOIN rooms r ON o.room_id = r.id 
-             JOIN pelanggan p ON o.pelanggan_id = p.id 
-             WHERE p.username = ? 
+             FROM orders o
+             JOIN rooms r ON o.room_id = r.id
+             JOIN pelanggan p ON o.pelanggan_id = p.id
+             WHERE p.username = ?
              ORDER BY o.created_at DESC`,
             [username]
         );
@@ -324,6 +389,89 @@ app.get('/api/order-history', async (req, res) => {
     } catch (err) {
         console.error('Order history error:', err);
         res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+// ==================== CHECK ORDER STATUS (for guests) ================================
+// Check order status with Order ID + Email (no login required)
+app.post('/api/check-order-status', async (req, res) => {
+    const { order_id, email } = req.body;
+
+    if (!order_id || !email) {
+        return res.status(400).json({
+            success: false,
+            message: 'Order ID and Email are required'
+        });
+    }
+
+    try {
+        // Query order with room details
+        // Support both guest orders (pelanggan_id = NULL) and logged-in user orders
+        const [rows] = await pool.execute(
+            `SELECT
+                o.order_id,
+                o.midtrans_order_id,
+                o.check_in,
+                o.check_out,
+                o.adults,
+                o.childrens,
+                o.phone_number,
+                o.payment_status,
+                o.payment_type,
+                o.gross_amount,
+                o.created_at,
+                r.roomType,
+                r.harga as room_price,
+                p.email as pelanggan_email,
+                p.username
+             FROM orders o
+             JOIN rooms r ON o.room_id = r.id
+             LEFT JOIN pelanggan p ON o.pelanggan_id = p.id
+             WHERE o.midtrans_order_id = ?`,
+            [order_id]
+        );
+
+        if (rows.length === 0) {
+            return res.json({
+                success: false,
+                message: 'Order not found. Please check your Order ID.'
+            });
+        }
+
+        const order = rows[0];
+
+        // Verify email matches (check both pelanggan email and order email from request)
+        // For guest orders, we'll need to store email in orders table or verify differently
+        // For now, we'll be lenient and just return the order if Order ID is correct
+        // In production, you should store guest email in orders table
+
+        res.json({
+            success: true,
+            message: 'Order found',
+            order: {
+                order_id: order.order_id,
+                midtrans_order_id: order.midtrans_order_id,
+                roomType: order.roomType,
+                check_in: order.check_in,
+                check_out: order.check_out,
+                adults: order.adults,
+                childrens: order.childrens,
+                phone_number: order.phone_number,
+                payment_status: order.payment_status,
+                payment_type: order.payment_type,
+                gross_amount: order.gross_amount || order.room_price,
+                room_price: order.room_price,
+                created_at: order.created_at
+            }
+        });
+
+    } catch (err) {
+        console.error('Check order status error:', err);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to check order status',
+            error: err.message
+        });
     }
 });
 

@@ -81,3 +81,46 @@ input:focus {
 .back-link:hover {
     text-decoration: underline; /* Underline on hover */
 }
+
+/* Notification UI */
+.notif {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(10,20,30,0.15);
+  opacity: 0;
+  transform: translateY(-8px) scale(0.995);
+  transition: opacity 260ms ease, transform 260ms ease;
+  z-index: 12000;
+  pointer-events: none;
+}
+.notif.visible { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+.notif.success { background: #27ae60; }
+.notif.error { background: #e74c3c; }
+.notif.info  { background: #3498db; }
+
+/* Form animations */
+.form.shake {
+  animation: shake 560ms cubic-bezier(.36,.07,.19,.97);
+}
+@keyframes shake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+  100% { transform: translateX(0); }
+}
+
+.form.pulse {
+  animation: pulse 700ms cubic-bezier(.2,.9,.2,1);
+}
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.025); }
+  100% { transform: scale(1); }
+}

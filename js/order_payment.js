@@ -73,24 +73,24 @@ async function createMidtransPayment(orderData) {
             snap.pay(result.token, {
                 onSuccess: function(result) {
                     console.log('Payment success:', result);
-                    // Update payment status in database
-                    updatePaymentStatusInDB(orderData.midtrans_order_id, 'completed');
+                    // Get actual payment status from Midtrans API
+                    updatePaymentFromMidtrans(orderData.midtrans_order_id, 'completed');
                     // Update UI to show success
                     updatePaymentStatus('success', result);
-                    // Redirect to history page after 2 seconds
+                    // Redirect based on login status
                     setTimeout(() => {
-                        window.location.href = 'history.html';
+                        redirectAfterPayment(orderData.midtrans_order_id, orderData.email);
                     }, 2000);
                 },
                 onPending: function(result) {
                     console.log('Payment pending:', result);
-                    // Update payment status in database
-                    updatePaymentStatusInDB(orderData.midtrans_order_id, 'pending');
+                    // Get actual payment status from Midtrans API
+                    updatePaymentFromMidtrans(orderData.midtrans_order_id, 'pending');
                     // Update UI to show pending
                     updatePaymentStatus('pending', result);
-                    // Redirect to history page to check status
+                    // Redirect based on login status
                     setTimeout(() => {
-                        window.location.href = 'history.html';
+                        redirectAfterPayment(orderData.midtrans_order_id, orderData.email);
                     }, 2000);
                 },
                 onError: function(result) {
@@ -173,48 +173,107 @@ function updatePaymentStatus(status, result) {
     }
 }
 
-// Show notification
-function showNotification(message, type = 'info') {
+// Show notification - Enhanced version
+function showNotification(message, type = 'info', duration = 5000) {
     // Create notification element
     const notification = document.createElement('div');
+
+    // Add animation keyframes
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+
     notification.style.cssText = `
         position: fixed;
         top: 20px;
         right: 20px;
-        padding: 15px 20px;
-        border-radius: 8px;
+        padding: 18px 24px;
+        border-radius: 10px;
         color: white;
         font-weight: bold;
-        z-index: 10000;
-        max-width: 300px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        animation: slideInRight 0.3s ease;
+        z-index: 10001;
+        max-width: 350px;
+        min-width: 280px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        animation: slideInRight 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        font-size: 15px;
+        line-height: 1.5;
+        display: flex;
+        align-items: center;
+        gap: 12px;
     `;
-    
-    // Set color based on type
+
+    // Set icon and color based on type
+    let icon = '';
     switch (type) {
         case 'success':
-            notification.style.background = '#27ae60';
+            notification.style.background = 'linear-gradient(135deg, #27ae60 0%, #229954 100%)';
+            icon = '✅';
             break;
         case 'warning':
-            notification.style.background = '#f39c12';
+            notification.style.background = 'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)';
+            icon = '⚠️';
             break;
         case 'error':
-            notification.style.background = '#e74c3c';
+            notification.style.background = 'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)';
+            icon = '❌';
+            break;
+        case 'info':
+            notification.style.background = 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)';
+            icon = 'ℹ️';
             break;
         default:
-            notification.style.background = '#3498db';
+            notification.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            icon = '📢';
     }
-    
-    notification.textContent = message;
+
+    notification.innerHTML = `
+        <span style="font-size: 24px; flex-shrink: 0;">${icon}</span>
+        <span style="flex: 1;">${message}</span>
+        <button
+            onclick="this.parentElement.remove()"
+            style="background: rgba(255,255,255,0.2); border: none; color: white; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-size: 14px; font-weight: bold; flex-shrink: 0; transition: background 0.3s;"
+            onmouseover="this.style.background='rgba(255,255,255,0.3)'"
+            onmouseout="this.style.background='rgba(255,255,255,0.2)'"
+        >×</button>
+    `;
+
     document.body.appendChild(notification);
-    
-    // Auto remove after 5 seconds
+
+    // Auto remove after specified duration
     setTimeout(() => {
         if (notification.parentNode) {
-            notification.parentNode.removeChild(notification);
+            notification.style.animation = 'slideOutRight 0.3s ease-out';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
         }
-    }, 5000);
+    }, duration);
+
+    return notification;
 }
 
 // Legacy payment redirect function (for backward compatibility)
@@ -224,7 +283,63 @@ function redirectToPayment(orderId) {
     alert('Please use the new Midtrans payment system.');
 }
 
-// Update payment status in database
+// Update payment status from Midtrans API (get real status)
+async function updatePaymentFromMidtrans(orderId, fallbackStatus) {
+    try {
+        // First, try to get status from Midtrans API
+        const statusResponse = await fetch(`/api/midtrans/status/${orderId}`);
+        const statusData = await statusResponse.json();
+
+        if (statusData.success && statusData.transaction) {
+            const transaction = statusData.transaction;
+            console.log('Midtrans transaction status:', transaction);
+
+            // Map Midtrans status to our status
+            let paymentStatus = fallbackStatus;
+            let paymentType = transaction.payment_type || 'unknown';
+            let grossAmount = transaction.gross_amount || 0;
+
+            if (transaction.transaction_status === 'capture') {
+                paymentStatus = transaction.fraud_status === 'accept' ? 'paid' : 'challenged';
+            } else if (transaction.transaction_status === 'settlement') {
+                paymentStatus = 'completed';
+            } else if (transaction.transaction_status === 'pending') {
+                paymentStatus = 'pending';
+            } else if (['cancel', 'deny', 'expire'].includes(transaction.transaction_status)) {
+                paymentStatus = 'failed';
+            }
+
+            // Update in database with full details
+            const updateResponse = await fetch('/api/update-payment-status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    order_id: orderId,
+                    status: paymentStatus,
+                    payment_type: paymentType,
+                    gross_amount: grossAmount
+                })
+            });
+
+            const updateResult = await updateResponse.json();
+            if (updateResult.success) {
+                console.log('✅ Payment status updated from Midtrans:', paymentStatus, paymentType);
+            }
+        } else {
+            // Fallback: update with basic status
+            console.log('⚠️ Could not get Midtrans status, using fallback:', fallbackStatus);
+            await updatePaymentStatusInDB(orderId, fallbackStatus);
+        }
+    } catch (error) {
+        console.error('❌ Error getting Midtrans status:', error);
+        // Fallback: update with basic status
+        await updatePaymentStatusInDB(orderId, fallbackStatus);
+    }
+}
+
+// Update payment status in database (basic version)
 async function updatePaymentStatusInDB(orderId, status) {
     try {
         const response = await fetch('/api/update-payment-status', {
@@ -237,7 +352,7 @@ async function updatePaymentStatusInDB(orderId, status) {
                 status: status
             })
         });
-        
+
         const result = await response.json();
         if (result.success) {
             console.log('Payment status updated in database:', status);
@@ -246,6 +361,19 @@ async function updatePaymentStatusInDB(orderId, status) {
         }
     } catch (error) {
         console.error('Error updating payment status:', error);
+    }
+}
+
+// Redirect after payment based on login status
+function redirectAfterPayment(orderId, email) {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+    if (isLoggedIn) {
+        // Logged-in user: redirect to history page
+        window.location.href = 'history.html';
+    } else {
+        // Guest user: redirect to check order page with order details
+        window.location.href = `check_order.html?orderId=${encodeURIComponent(orderId)}&email=${encodeURIComponent(email)}`;
     }
 }
 

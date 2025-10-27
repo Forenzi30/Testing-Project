@@ -1,6 +1,28 @@
 document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.querySelector('.form');
 
+    // helper: create notification
+    function createNotification(message, type = 'info', timeout = 3500) {
+        const n = document.createElement('div');
+        n.className = `notif ${type}`;
+        n.textContent = message;
+        document.body.appendChild(n);
+        // show
+        requestAnimationFrame(() => n.classList.add('visible'));
+        // auto remove
+        setTimeout(() => {
+            n.classList.remove('visible');
+            setTimeout(()=> n.remove(), 300);
+        }, timeout);
+    }
+
+    // helper: animate form (shake / pulse)
+    function animateForm(effect) {
+        if (!loginForm) return;
+        loginForm.classList.add(effect);
+        loginForm.addEventListener('animationend', () => loginForm.classList.remove(effect), { once: true });
+    }
+
     loginForm.addEventListener('submit', async function (event) {
         event.preventDefault(); // Stop form submit default
 
@@ -9,7 +31,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Validasi sederhana
         if (username === '' || password === '') {
-            alert('Please fill in all fields.');
+            createNotification('Please fill in all fields.', 'error');
+            animateForm('shake');
             return;
         }
 
@@ -27,23 +50,41 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('Login response:', data);
 
             if (data.success) {
-                // Simpan status login di localStorage
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('username', username);
-                // Store admin flag
-                if (data.is_admin) {
-                    localStorage.setItem('isAdmin', 'true');
-                } else {
-                    localStorage.removeItem('isAdmin');
-                }
-                alert(data.message);
-                window.location.href = 'index.html'; // Pindah ke halaman utama
+                // show success animation & notification
+                createNotification('Login successful. Redirecting...', 'success', 1800);
+                animateForm('pulse');
+
+                // Simpan status login di localStorage after small delay to allow animation
+                setTimeout(() => {
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('username', username);
+                    if (data.is_admin) {
+                        localStorage.setItem('isAdmin', 'true');
+                    } else {
+                        localStorage.removeItem('isAdmin');
+                    }
+                    window.location.href = 'index.html'; // Pindah ke halaman utama
+                }, 900);
             } else {
-                alert(data.message);
+                // error handling: username not found vs wrong password
+                createNotification(data.message || 'Login failed', 'error', 3500);
+                // animate appropriate field / form
+                const msg = (data.message || '').toLowerCase();
+                if (msg.includes('username')) {
+                    // focus username and shake
+                    document.getElementById('username')?.focus();
+                    animateForm('shake');
+                } else if (msg.includes('password')) {
+                    document.getElementById('password')?.focus();
+                    animateForm('shake');
+                } else {
+                    animateForm('shake');
+                }
             }
         } catch (err) {
             console.error(err);
-            alert('Terjadi kesalahan saat login.');
+            createNotification('An error occurred while login.', 'error');
+            animateForm('shake');
         }
     });
 });

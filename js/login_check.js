@@ -34,6 +34,10 @@ function updateNav() {
             historyLink.style.display = '';
         }
 
+        // Hide Check Order link for logged-in users (they use History instead)
+        const checkOrderLink = document.querySelector('a[href="check_order.html"]');
+        if (checkOrderLink) checkOrderLink.style.display = 'none';
+
         // Show Logout button
         loginBtn.textContent = 'Logout';
         loginBtn.href = '#';
@@ -55,6 +59,19 @@ function updateNav() {
         // Guest: keep Order visible; hide History if present
         const historyLink = document.querySelector('a[href="history.html"]');
         if (historyLink) historyLink.style.display = 'none';
+
+        // Show "Check Order" link for guests
+        let checkOrderLink = document.querySelector('a[href="check_order.html"]');
+        if (!checkOrderLink) {
+            checkOrderLink = document.createElement('a');
+            checkOrderLink.href = 'check_order.html';
+            checkOrderLink.textContent = 'Check Order';
+            checkOrderLink.className = 'nav-btn check-order-link';
+            // Insert before login button
+            orderLink.parentNode.insertBefore(checkOrderLink, loginBtn);
+        } else {
+            checkOrderLink.style.display = '';
+        }
 
         // Show Login button
         loginBtn.textContent = 'Login';

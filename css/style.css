@@ -24,8 +24,8 @@
   --surface: #ffffff;
   --muted: #6b7280;
   --text: #000000;
-  --accent: #0ea5a4;
-  --accent-2: #036d6b;
+  --accent: #61A4C9;
+  --accent-2: #61A4C9;
   --card-border: rgba(15,25,30,0.06);
   --focus: rgba(14,165,164,0.18);
   --radius: 12px;
@@ -380,7 +380,7 @@ body {
     left: 0;
     width: 100%;
     background-color: #333;
-    background-image: url('../images/navbar-background.png');
+    /*background-image: url('../images/navbar-background.png');*/
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -507,7 +507,7 @@ footer {
 
 .footer-column {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
 }
 
 .footer-column h4 {
@@ -517,18 +517,8 @@ footer {
     padding-bottom: 5px;
 }
 
-.copyright, .media-social, .alamat {
+.copyright {
     padding-left: 10px;  /* This indents the content under each h4 */
-}
-
-.media-social a {
-    color: white;
-    margin-right: 10px;
-    font-size: 1.2em;
-}
-
-.media-social a:hover {
-    color: #61A4C9;
 }
 
 /* Responsive Design */
