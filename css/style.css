@@ -192,6 +192,48 @@ p,li,button,input { line-height:1.6; }
   .menu-btn { display:block; position:relative; z-index:1300; }
 }
 
+/* Ensure mobile menu appears reliably when JS adds .nav-open (fallback for pages with differing navbar rules) */
+@media (max-width: 768px) {
+  .nav-open .navbar {
+    display: flex !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 70vw;
+    height: 100vh;
+    background: rgba(15,23,30,0.98);
+    flex-direction: column;
+    z-index: 2000;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.18);
+    padding: 18px;
+    gap: 18px;
+    transform: translateX(0);
+    overflow-y: auto;
+  }
+
+  .nav-open .navbar .nav-links {
+    display: flex !important;
+    flex-direction: column;
+    gap: 16px;
+    margin: 0;
+    padding: 8px 0;
+  }
+
+  .nav-open .navbar .nav-buttons {
+    display: flex !important;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  /* make nav buttons full-width inside the mobile panel */
+  .nav-open .navbar .nav-buttons .nav-btn {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+  }
+}
+
 /* Hero / Carousel */
 .hero { width:100%; overflow:hidden; position:relative; border-radius: 0 0 var(--card-radius) var(--card-radius); }
 .hero .slides { display:flex; transition: transform 700ms ease; will-change: transform; }
@@ -453,6 +495,18 @@ body {
     padding: 20px;
 }
 
+/* Small layout overrides to avoid .content stretching into a blank white area on taller viewports (tablet/iPad) */
+.container {
+  /* keep existing behavior but ensure content stacks vertically */
+  flex-direction: column;
+}
+
+/* Prevent the main content panel from flex-growing to fill the viewport —
+   it should size to its inner content so the footer sits directly below. */
+.content {
+  flex: 0 0 auto;
+}
+
 header {
     margin-bottom: 30px;
 }
@@ -622,4 +676,30 @@ footer {
         justify-self: center;
         width: 60%; /* Adjust as needed for your design */
     }
+}
+
+/* Tablet (iPad) fixes: avoid container stretching to full viewport height which causes a visible gap before footer.
+   Targets typical tablet widths (portrait & landscape) only so desktop behavior remains unchanged. */
+@media (min-width: 768px) and (max-width: 1366px) {
+  .container {
+    /* let container height follow its children rather than forcing 100vh */
+    min-height: auto;
+    align-items: flex-start; /* make sure children stack from top */
+  }
+
+  .content {
+    /* ensure content wraps its inner height and doesn't introduce bottom space */
+    flex: 0 0 auto;
+    margin-bottom: 0 !important;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    /* reduce bottom shadow on tablet so no thin strip appears above footer */
+    box-shadow: 0 8px 24px rgba(12,18,24,0.04);
+    padding-bottom: 20px;
+  }
+
+  /* If you have hero/sections that were set to large vh heights, reduce them slightly on tablets */
+  .hero .slide {
+    height: 56vh; /* reduce from 80vh to avoid pushing content unnecessarily */
+  }
 }

@@ -252,6 +252,47 @@ footer {
     }
 }
 
+/* Ensure mobile menu appears reliably when JS adds .nav-open */
+@media (max-width: 768px) {
+  .nav-open .navbar {
+    display: flex !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 70vw;
+    height: 100vh;
+    background: rgba(15,23,30,0.98);
+    flex-direction: column;
+    z-index: 2000;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.18);
+    padding: 18px;
+    gap: 18px;
+    transform: translateX(0);
+    overflow-y: auto;
+  }
+
+  .nav-open .navbar .nav-links {
+    display: flex !important;
+    flex-direction: column;
+    gap: 16px;
+    margin: 0;
+    padding: 8px 0;
+  }
+
+  .nav-open .navbar .nav-buttons {
+    display: flex !important;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .nav-open .navbar .nav-buttons .nav-btn {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+  }
+}
+
 @keyframes slideIn {
     from { transform: translateX(-100%);}
     to { transform: translateX(0);}
