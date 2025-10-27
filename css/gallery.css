@@ -469,6 +469,7 @@ footer {
 
 .footer-column h4 {
     margin-bottom: 15px;  /* This creates space between h4 and the content below it */
+    margin-top: auto;
     font-size: 1.2em;
     border-bottom: 2px solid white;  /* This adds a line under each h4 */
     padding-bottom: 5px;
